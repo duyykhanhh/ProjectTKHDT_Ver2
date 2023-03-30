@@ -7,13 +7,14 @@ public class NormalPrice implements IPriceStrategy{
 	@Override
 	public int getPoint(double price) {
 		// TODO Auto-generated method stub
-		return 0;
+
+		return Price.getPoint(this,price);
 	}
 
 	@Override
-	public int getPrice(double price) {
+	public double getPrice(double price) {
 		// TODO Auto-generated method stub
-		return 0;
+		return Price.getPrice(this,price);
 	}
 	
 

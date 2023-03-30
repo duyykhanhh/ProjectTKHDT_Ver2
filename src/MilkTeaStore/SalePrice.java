@@ -5,15 +5,15 @@ public class SalePrice implements IPriceStrategy{
 	private int salingPercent=30;
 	
 	@Override
-	public int getPrice(double price) {
+	public double getPrice(double price) {
 		// TODO Auto-generated method stub
-		return 0;
+		return Price.getPrice(this,price);
 	}
 
 	@Override
 	public int getPoint(double price) {
 		// TODO Auto-generated method stub
-		return 0;
+		return Price.getPoint(this,price);
 	}
 	
 

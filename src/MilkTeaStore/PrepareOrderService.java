@@ -4,7 +4,7 @@ import java.util.List;
 
 public class PrepareOrderService implements IServiceObserver{
 	private OrderData orderData;
-	private List<Drink> drinks;
+	private List<Drink> drinks= new ArrayList<>();
 	
 	public PrepareOrderService(OrderData orderData) {
 		super();
@@ -16,7 +16,13 @@ public class PrepareOrderService implements IServiceObserver{
 	@Override
 	public void update(String cusId, List<Drink> drinks, String address) {
 		// TODO Auto-generated method stub
+		this.drinks= drinks;
+		this.prepareOrder();
 		
+	}
+
+	public void prepareOrder(){
+		System.out.println("Don nuoc: " + this.drinks.toString() + " dang duoc thuc hien");
 	}
 	
 }

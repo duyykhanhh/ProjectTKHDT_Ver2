@@ -1,7 +1,7 @@
 package MilkTeaStore;
 
 public class MilkTea extends Drink{
-
+	private double price= 13000;
 	public MilkTea() {
 		
 	}
@@ -9,12 +9,12 @@ public class MilkTea extends Drink{
 	@Override
 	public String getDiscription() {
 		// TODO Auto-generated method stub
-		return "Trà sữa";
+		return "Milk tea";
 	}
 
 	@Override
 	public double getPrice() {
 		// TODO Auto-generated method stub
-		return 10000;
+		return price;
 	}
 }

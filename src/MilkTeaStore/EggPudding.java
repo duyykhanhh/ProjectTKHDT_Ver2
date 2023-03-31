@@ -1,7 +1,7 @@
 package MilkTeaStore;
 
 public class EggPudding extends ToppingDecorator{
-
+	private double price=5000;
 	public EggPudding(Drink drink) {
 		super(drink);
 		// TODO Auto-generated constructor stub
@@ -10,15 +10,14 @@ public class EggPudding extends ToppingDecorator{
 	@Override
 	public String getDiscription() {
 		// TODO Auto-generated method stub
-		return null;
+		return drink.getDiscription() + " Eggpudding ";
 	}
 
 	@Override
 	public double getPrice() {
 		// TODO Auto-generated method stub
-		return 0;
+		return drink.getPrice() + price;
 	}
-	
-	
+
 
 }

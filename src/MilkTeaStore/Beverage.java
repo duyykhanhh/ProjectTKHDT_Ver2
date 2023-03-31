@@ -24,10 +24,13 @@ public class Beverage {
 	}
 	public double getPrice() {
 		return priceStrategy.getPrice(size.getPrice() * (drink.getPrice() + flavor.getPrice()))  ;
-		
+
 	}
 	public double getPoint() {
 		return priceStrategy.getPoint(size.getPrice() * (drink.getPrice() + flavor.getPrice()));
 		
 	}
+
+
+
 }

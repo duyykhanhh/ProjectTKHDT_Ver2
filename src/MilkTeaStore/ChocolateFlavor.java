@@ -16,4 +16,6 @@ private int price;
 		return Flavor.getPrice(this);
 	}
 
+	sysout
+
 }

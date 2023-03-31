@@ -1,18 +1,18 @@
 package MilkTeaStore;
 
 public class MineralWater extends Drink {
-    int price;
+    int price=0;
 
 
     @Override
     public String getDiscription() {
         // TODO Auto-generated method stub
-        return null;
+        return "Mineral water";
     }
 
     @Override
     public double getPrice() {
         // TODO Auto-generated method stub
-        return 0;
+        return this.price;
     }
 }

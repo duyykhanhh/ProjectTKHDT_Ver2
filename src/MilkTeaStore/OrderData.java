@@ -6,13 +6,13 @@ import java.util.List;
 public class OrderData implements IServiceObservable{
 	private String cusId;
 	private List<Drink> drinks;
-	private String address;
+	private String table;
 	private List<IServiceObserver> services;
-	public OrderData(String cusId, List<Drink> drinks, String address, List<IServiceObserver> services) {
+	public OrderData(String cusId, List<Drink> drinks, String table, List<IServiceObserver> services) {
 		super();
 		this.cusId = cusId;
 		this.drinks = drinks;
-		this.address = address;
+		this.table = table;
 		this.services = services;
 	}
 	@Override
@@ -33,14 +33,14 @@ public class OrderData implements IServiceObservable{
 	public List<Drink> getDrinks() {
 		return drinks;
 	}
-	public String getAddress() {
-		return address;
+	public String getTable() {
+		return table;
 	}
 	@Override
 	public void nofity() {
 		// TODO Auto-generated method stub
 		for(IServiceObserver oser: services)
-			oser.update(getCusId(), getDrinks(), getAddress());
+			oser.update(getCusId(), getDrinks(), getTable());
 	}
 	public void setCusId(String cusId) {
 		this.cusId = cusId;
@@ -48,8 +48,8 @@ public class OrderData implements IServiceObservable{
 	public void setDrinks(List<Drink> drinks) {
 		this.drinks = drinks;
 	}
-	public void setAddress(String address) {
-		this.address = address;
+	public void setTable(String table) {
+		this.table = table;
 	}
 	
 	public void orderChanged() {

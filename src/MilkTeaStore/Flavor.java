@@ -6,25 +6,25 @@ public class Flavor {
 	private static double taroPrice = 5000;
 
 public static String getFlavorDescription(Object o) {
-	if(o instanceof ChocolateFlavor) {
+	if(o instanceof ChocolateFlavour) {
 		return "Chocolate";
 	}
-	else if(o instanceof MatchaFlavor) {
+	else if(o instanceof MatchaFlavour) {
 		return "Matcha";
 	}
-	else if(o instanceof TaroFlavor) {
+	else if(o instanceof TaroFlavour) {
 		return "Taro";
 	}
 	return "";
 }
 public static double getPrice(Object o) {
-	if(o instanceof ChocolateFlavor) {
+	if(o instanceof ChocolateFlavour) {
 		return chocolatePrice;
 	}
-	else if(o instanceof MatchaFlavor) {
+	else if(o instanceof MatchaFlavour) {
 		return mathcaPrice;
 	}
-	else if(o instanceof TaroFlavor) {
+	else if(o instanceof TaroFlavour) {
 		return taroPrice;
 	}
 	return 0;

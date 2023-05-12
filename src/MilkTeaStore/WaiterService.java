@@ -5,11 +5,13 @@ import java.util.List;
 public class WaiterService implements IServiceObserver{
 	private OrderData orderData;
 	private String table;
-	public DeliveryService(OrderData orderData) {
+
+	public WaiterService(OrderData orderData, String table) {
 		super();
 		this.orderData = orderData;
-		orderData.registerServer(this);
+		this.table = table;
 	}
+
 	@Override
 	public void update(String cusId, List<Drink> drinks, String table) {
 		// TODO Auto-generated method stub
@@ -18,7 +20,7 @@ public class WaiterService implements IServiceObserver{
 	}
 
 	public void DeliveryDrink(){
-		Systemp.out.println("Ban " + this.table + " da duoc giao nuoc");
+//		Systemp.out.println("Ban " + this.table + " da duoc giao nuoc");
 	}
 	
 }

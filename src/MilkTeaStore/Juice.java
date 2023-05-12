@@ -1,6 +1,8 @@
 package MilkTeaStore;
 
-public class MineralWater extends Drink {
+import java.util.ArrayList;
+
+public class Juice extends Drink {
     int price=0;
 
 
@@ -15,4 +17,10 @@ public class MineralWater extends Drink {
         // TODO Auto-generated method stub
         return this.price;
     }
+
+	@Override
+	public void addTopping(Drink dr, ArrayList<String> toppings) {
+		// TODO Auto-generated method stub
+		
+	}
 }

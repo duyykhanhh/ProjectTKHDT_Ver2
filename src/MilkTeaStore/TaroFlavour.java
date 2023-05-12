@@ -1,6 +1,6 @@
 package MilkTeaStore;
 
-public class TaroFlavor implements IFlavorStrategy{
+public class TaroFlavour implements IFlavourStrategy{
 
 	@Override
 	public String getFlavorDiscription() {

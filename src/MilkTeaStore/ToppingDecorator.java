@@ -15,5 +15,6 @@ public abstract class ToppingDecorator extends Drink{
 		this.drink = drink;
 	}
 
+	public abstract String getDiscription();
 	
 }

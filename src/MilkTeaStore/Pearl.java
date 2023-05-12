@@ -1,5 +1,7 @@
 package MilkTeaStore;
 
+import java.util.ArrayList;
+
 public class Pearl extends ToppingDecorator{
 	private double price=3000;
 	public Pearl(Drink drink) {
@@ -17,6 +19,12 @@ public class Pearl extends ToppingDecorator{
 	public double getPrice() {
 		// TODO Auto-generated method stub
 		return drink.getPrice() + price;
+	}
+
+	@Override
+	public void addTopping(Drink dr, ArrayList<String> toppings) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

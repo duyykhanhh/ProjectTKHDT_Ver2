@@ -1,5 +1,7 @@
 package MilkTeaStore;
 
+import java.util.ArrayList;
+
 public class Coffee extends Drink{
 	private double price=15000;
 	public Coffee() {
@@ -29,5 +31,11 @@ public class Coffee extends Drink{
 
 	public boolean getIsIce() {
 		return isIce;
+	}
+
+	@Override
+	public void addTopping(Drink dr, ArrayList<String> toppings) {
+		// TODO Auto-generated method stub
+		
 	}
 }

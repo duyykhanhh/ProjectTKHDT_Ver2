@@ -1,7 +1,7 @@
 package MilkTeaStore;
 
-public class MatchaFlavor implements IFlavorStrategy{
-
+public class ChocolateFlavour implements IFlavourStrategy{
+private int price;
 	@Override
 	public String getFlavorDiscription() {
 		// TODO Auto-generated method stub
@@ -11,7 +11,11 @@ public class MatchaFlavor implements IFlavorStrategy{
 	@Override
 	public double getPrice() {
 		// TODO Auto-generated method stub
+		
+
 		return Flavor.getPrice(this);
 	}
+
+	
 
 }

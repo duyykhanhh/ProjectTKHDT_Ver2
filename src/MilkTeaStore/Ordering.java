@@ -1,5 +1,6 @@
 package MilkTeaStore;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.management.DescriptorAccess;
@@ -44,7 +45,7 @@ public class Ordering implements IServiceObserver{
 	public void setOrderData(String cusId, List<Drink> drinks, String table) {
 		orderData.setCusId(cusId);
 		orderData.setDrinks(drinks);
-		orderData.setAddress(table);
+//		orderData.setAddress(table);
 
 		//kêu cái orderData thông báo cho mấy cái service
 		orderData.orderChanged();

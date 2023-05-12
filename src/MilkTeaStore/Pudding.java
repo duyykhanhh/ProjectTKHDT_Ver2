@@ -1,8 +1,10 @@
 package MilkTeaStore;
 
-public class EggPudding extends ToppingDecorator{
+import java.util.ArrayList;
+
+public class Pudding extends ToppingDecorator{
 	private double price=5000;
-	public EggPudding(Drink drink) {
+	public Pudding(Drink drink) {
 		super(drink);
 		// TODO Auto-generated constructor stub
 	}
@@ -17,6 +19,12 @@ public class EggPudding extends ToppingDecorator{
 	public double getPrice() {
 		// TODO Auto-generated method stub
 		return drink.getPrice() + price;
+	}
+
+	@Override
+	public void addTopping(Drink dr, ArrayList<String> toppings) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

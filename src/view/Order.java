@@ -25,9 +25,12 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -35,6 +38,9 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+
+import javax.swing.JTextField;
 
 public class Order extends JFrame {
 //	khai bao nuoc
@@ -45,6 +51,10 @@ public class Order extends JFrame {
 	private String dr, size, flavour, topping;
 	private ArrayList<String> toppings;
 	private ArrayList<String> beverage;
+	
+//	dem thoi gian tro giup trong lam hieu ung button, khong duoc xoa
+	private javax.swing.Timer timer;
+	private int count=0;
 	
 	
 //	khai bao thanh phan giao dien
@@ -59,9 +69,12 @@ public class Order extends JFrame {
 	private JButton btnChocolate, btnMatcha, btnTaro, btnPearl,btnPudding, btnGrassjelly, btnS, btnM, btnL, btnOK;
 	
 //	bien ho tro doi mau btn Topping
-	private int countPearl=1;
-	private int countPudding=1;
-	private int countGrassJelly=1;
+	private int countPearl=0;
+	private int countPudding=0;
+	private int countGrassJelly=0;
+	private JLabel lblNumOfPearl;
+	private JLabel lblNumOfPudding;
+	private JLabel lblNumOfGrassJelly;
 	
 
 	/**
@@ -90,7 +103,7 @@ public class Order extends JFrame {
 	public Order() {
 		setTitle("Order");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1024, 600);
+		setBounds(100, 100, 1224, 600);
 		pnOrder = new JPanel();
 		pnOrder.setBorder(new EmptyBorder(5, 5, 5, 5));
 		pnOrder.setLayout(new BorderLayout(0, 0));
@@ -239,9 +252,9 @@ public class Order extends JFrame {
 		pnOrdering = new JPanel();
 		Border bdOrdering= BorderFactory.createMatteBorder(0, 0, 0, 2, new Color(255,153,51));
 		pnOrdering.setBorder(bdOrdering);
-		pnOrdering.setMinimumSize(new Dimension(660,600));
-		pnOrdering.setMaximumSize(new Dimension(660,600));
-		pnOrdering.setPreferredSize(new Dimension(660,600));
+		pnOrdering.setMinimumSize(new Dimension(860,600));
+		pnOrdering.setMaximumSize(new Dimension(860,600));
+		pnOrdering.setPreferredSize(new Dimension(860,600));
 
 		pnOrder.add(pnOrdering, BorderLayout.WEST);
 		pnOrdering.setLayout(new BoxLayout(pnOrdering, BoxLayout.X_AXIS));
@@ -326,9 +339,9 @@ public class Order extends JFrame {
 		
 		pnCustomOK= new JPanel();
 		pnCustomOK.setLayout(new BorderLayout(0, 0));
-		pnCustomOK.setPreferredSize(new Dimension(490,500));
-		pnCustomOK.setMinimumSize(new Dimension(490, 500));
-		pnCustomOK.setMaximumSize(new Dimension(490, 500));
+		pnCustomOK.setPreferredSize(new Dimension(690,500));
+		pnCustomOK.setMinimumSize(new Dimension(690, 500));
+		pnCustomOK.setMaximumSize(new Dimension(690, 500));
 //		Border bdCustomOK= BorderFactory.createMatteBorder(0, 0, 0, 2, new Color(255,153,51));
 //		pnCustomOK.setBorder(bdCustomOK);
 		pnOrdering.add(pnCustomOK);
@@ -412,9 +425,9 @@ public class Order extends JFrame {
 		
 		pnFlavour = new JPanel();
 		pnFlavour.setAlignmentX(Component.LEFT_ALIGNMENT);
-		pnFlavour.setPreferredSize(new Dimension(470, 100));
-		pnFlavour.setMinimumSize(new Dimension(470, 100));
-		pnFlavour.setMaximumSize(new Dimension(470, 100));
+		pnFlavour.setPreferredSize(new Dimension(670, 100));
+		pnFlavour.setMinimumSize(new Dimension(670, 100));
+		pnFlavour.setMaximumSize(new Dimension(670, 100));
 		
 		Border bdFlavour = BorderFactory.createMatteBorder(0,0, 2, 0, new Color(255, 153, 51));
 		TitledBorder ttBdFlavour= BorderFactory.createTitledBorder(bdFlavour, "Flavour", TitledBorder.LEFT, TitledBorder.ABOVE_TOP);
@@ -469,51 +482,165 @@ public class Order extends JFrame {
 //		pnMTCustom.add(lblTopping);
 		
 		pnTopping = new JPanel();
-		pnTopping.setPreferredSize(new Dimension(470, 100));
-		pnTopping.setMinimumSize(new Dimension(470, 100));
-		pnTopping.setMaximumSize(new Dimension(470, 100));
+		pnTopping.setPreferredSize(new Dimension(670, 100));
+		pnTopping.setMinimumSize(new Dimension(670, 100));
+		pnTopping.setMaximumSize(new Dimension(670, 100));
 		pnTopping.setAlignmentX(0.0f);
 		pnMTCustom.add(pnTopping);
 		pnTopping.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 		
 		Border bdTopping = BorderFactory.createMatteBorder(0,0, 2, 0, new Color(255, 153, 51));
-		TitledBorder ttBdTopping= BorderFactory.createTitledBorder(bdTopping, "Flavour", TitledBorder.LEFT, TitledBorder.ABOVE_TOP);
+		TitledBorder ttBdTopping= BorderFactory.createTitledBorder(bdTopping, "Topping", TitledBorder.LEFT, TitledBorder.ABOVE_TOP);
 		ttBdTopping.setTitleFont((new Font("Tahoma", Font.PLAIN, 14)));
 		ttBdTopping.setTitleColor(Color.gray);
 		ttBdTopping.setTitleJustification(TitledBorder.LEFT);
 		pnTopping.setBorder(ttBdTopping);
 		
-		btnPearl = new JButton("Pearl");
+		btnPearl = new JButton("Pearl");	
+		
 		btnPearl.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				pressedTopping(btnPearl);
-				
+				countPearl();
+				lblNumOfPearl.setText(countPearl+"");
+				changeBtnToppingColor(btnPearl, countPearl);
 			}
 		});
+
+		
+		btnPearl.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+	        	timer= new javax.swing.Timer(490, new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						countPearl=-1;
+	                    
+					}
+				});
+	
+	            timer.start();
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				timer.stop();
+			}
+		});
+
+
 		btnPearl.setPreferredSize(new Dimension(120, 40));
 		btnPearl.setMinimumSize(new Dimension(120, 40));
 		btnPearl.setMaximumSize(new Dimension(120, 40));
 		btnPearl.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		
+	
 		pnTopping.add(btnPearl);
 		
 		btnPudding = new JButton("Pudding");
 		btnPudding.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				pressedTopping(btnPudding);
-				
+				countPudding();
+				lblNumOfPudding.setText(countPudding+"");
+				changeBtnToppingColor(btnPudding, countPudding);
 			}
 		});
+
+		
+		btnPudding.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+	        	timer= new javax.swing.Timer(490, new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						countPudding=-1;
+	                    
+					}
+				});
+	
+	            timer.start();
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				timer.stop();
+			}
+		});
+		
+		lblNumOfPearl = new JLabel("0");
+		lblNumOfPearl.setBorder(BorderFactory.createLineBorder(new Color(255, 204, 153), 2));
+		lblNumOfPearl.setPreferredSize(new Dimension(30, 40));
+		lblNumOfPearl.setMinimumSize(new Dimension(30, 40));
+		lblNumOfPearl.setMaximumSize(new Dimension(30, 40)); 
+		lblNumOfPearl.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		pnTopping.add(lblNumOfPearl);
+		
+		pnTopping.add(Box.createHorizontalStrut(3));
+		JLabel line = new JLabel();
+        line.setOpaque(true);
+        line.setBackground(new Color(255,153,51));
+        line.setPreferredSize(new Dimension(2, 60));
+        line.setMinimumSize(new Dimension(2, 60));
+        line.setMaximumSize(new Dimension(2, 60));       
+        pnTopping.add(line);
+        
+        pnTopping.add(Box.createHorizontalStrut(3));
 		btnPudding.setPreferredSize(new Dimension(120, 40));
 		btnPudding.setMinimumSize(new Dimension(120, 40));
 		btnPudding.setMaximumSize(new Dimension(120, 40));
 		btnPudding.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		pnTopping.add(btnPudding);
 		
+		lblNumOfPudding = new JLabel("0");
+		lblNumOfPudding.setPreferredSize(new Dimension(30, 40));
+		lblNumOfPudding.setMinimumSize(new Dimension(30, 40));
+		lblNumOfPudding.setMaximumSize(new Dimension(30, 40));
+		lblNumOfPudding.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNumOfPudding.setBorder(BorderFactory.createLineBorder(new Color(255, 204, 153), 2));
+		pnTopping.add(lblNumOfPudding);
+		
+		pnTopping.add(Box.createHorizontalStrut(3));
+		JLabel line2 = new JLabel();
+        line2.setOpaque(true);
+        line2.setBackground(new Color(255,153,51));
+        line2.setPreferredSize(new Dimension(2, 60));
+        line2.setMinimumSize(new Dimension(2, 60));
+        line2.setMaximumSize(new Dimension(2, 60));       
+        pnTopping.add(line2);
+        
+        pnTopping.add(Box.createHorizontalStrut(3));
+        
+        
+		
 		btnGrassjelly = new JButton("GrassJelly");
 		btnGrassjelly.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				pressedTopping(btnGrassjelly);
-				
+				countGrassJelly();
+				lblNumOfGrassJelly.setText(countGrassJelly+"");
+				changeBtnToppingColor(btnGrassjelly, countGrassJelly);
+			}
+		});
+
+		
+		btnGrassjelly.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+	        	timer= new javax.swing.Timer(490, new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						countGrassJelly=-1;
+	                    
+					}
+				});
+	
+	            timer.start();
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				timer.stop();
 			}
 		});
 		btnGrassjelly.setPreferredSize(new Dimension(120, 40));
@@ -529,15 +656,15 @@ public class Order extends JFrame {
 //		pnMTCustom.add(lblSize);
 		
 		pnSize = new JPanel();
-		pnSize.setPreferredSize(new Dimension(470, 100));
-		pnSize.setMinimumSize(new Dimension(470, 100));
-		pnSize.setMaximumSize(new Dimension(470, 100));
+		pnSize.setPreferredSize(new Dimension(670, 100));
+		pnSize.setMinimumSize(new Dimension(670, 100));
+		pnSize.setMaximumSize(new Dimension(670, 100));
 		pnSize.setAlignmentX(0.0f);
 		pnMTCustom.add(pnSize);
 		pnSize.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 		
 		Border bdSize = BorderFactory.createMatteBorder(0,0, 2, 0, new Color(255, 153, 51));
-		TitledBorder ttBdSize= BorderFactory.createTitledBorder(bdSize, "Flavour", TitledBorder.LEFT, TitledBorder.ABOVE_TOP);
+		TitledBorder ttBdSize= BorderFactory.createTitledBorder(bdSize, "Size", TitledBorder.LEFT, TitledBorder.ABOVE_TOP);
 		ttBdSize.setTitleFont((new Font("Tahoma", Font.PLAIN, 14)));
 		ttBdSize.setTitleColor(Color.gray);
 		ttBdSize.setTitleJustification(TitledBorder.LEFT);
@@ -582,34 +709,7 @@ public class Order extends JFrame {
 		pnCoffee = new JPanel();
 		pnCustom.add(pnCoffee, "coffee");
 		pnCoffee.setLayout(new BoxLayout(pnCoffee, BoxLayout.Y_AXIS));
-		
 
-		
-		
-		
-		
-		
-		
-//		JLabel lblQuantity = new JLabel("Total");
-//		JLabel lblReQuan = new JLabel("9");
-//		
-//		JLabel lblPrice = new JLabel("Total price");
-//		JLabel lblRePrice = new JLabel("100000");
-//		
-//		JButton btnPay = new JButton("PAY");
-		
-//		GroupLayout gpnPay = new GroupLayout(pnPay);
-		
-		
-//		pnOrder.setBackground(new Color(255, 235, 205));
-//		pnCategory.setBackground(new Color(255, 235, 205));
-//		pnCustomOK.setBackground(new Color(255, 235, 205));
-//		pnCustom.setBackground(new Color(255, 235, 205));
-//		pnFlavour.setBackground(new Color(255, 235, 205));
-//		pnTopping.setBackground(new Color(255, 235, 205));
-//		pn.setBackground(new Color(255, 235, 205));
-		
-//		mau btnCategories
 		btnMilktea.setBackground(new Color(255, 153, 51));
 		btnCoffee.setBackground(new Color(255, 204, 153));
 		btnSoftDrink.setBackground(new Color(255, 204, 153));
@@ -627,6 +727,14 @@ public class Order extends JFrame {
 		btnPearl.setBackground(new Color(255, 204, 153));
 		btnPudding.setBackground(new Color(255, 204, 153));
 		btnGrassjelly.setBackground(new Color(255, 204, 153));
+		
+		lblNumOfGrassJelly = new JLabel("0");
+		lblNumOfGrassJelly.setPreferredSize(new Dimension(30, 40));
+		lblNumOfGrassJelly.setMinimumSize(new Dimension(30, 40));
+		lblNumOfGrassJelly.setMaximumSize(new Dimension(30, 40));
+		lblNumOfGrassJelly.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNumOfGrassJelly.setBorder(BorderFactory.createLineBorder(new Color(255, 204, 153), 2));
+		pnTopping.add(lblNumOfGrassJelly);
 		
 		btnS.setBackground(new Color(255, 204, 153));
 		btnM.setBackground(new Color(255, 204, 153));
@@ -704,43 +812,43 @@ public class Order extends JFrame {
 		getFlavour(btn);
 	}
 	
+	
+	
+	
+	
 //	ham xu ly btnTopping
 	
 //	ham doi mau btn
+	private void countNumOfTopping(int num) {
+		num++;
+		if(num>9)
+			num=0;
+	}
+
 
 	private void countPearl() {
 		this.countPearl++;
+		if(countPearl>9)
+			countPearl=0;
 	}
 	
 	private void countPudding() {
 		this.countPudding++;
+		if(countPudding>9)
+			countPudding=0;
 	}
 	
 	private void countGrassJelly() {
 		this.countGrassJelly++;
+		if(countGrassJelly>9)
+			countGrassJelly=0;
 	}
 	
 	private void changeBtnToppingColor(JButton btn, int n) {
-		if(n%2==0)
-			btn.setBackground(new Color(255,153,51));
-		else
+		if(n==0)
 			btn.setBackground(new Color(255, 204, 153));
-	}
-	
-	private void pressedTopping(JButton btn) {
-		String str=btn.getText();
-		if(str.equals("Pearl")) {	
-			countPearl();
-			changeBtnToppingColor(btn, countPearl);	
-		}
-		if(str.equals("Pudding")) {	
-			countPudding();
-			changeBtnToppingColor(btn, countPudding);	
-		}
-		if(str.equals("GrassJelly")) {	
-			countGrassJelly();
-			changeBtnToppingColor(btn, countGrassJelly);	
-		}
+		else
+			btn.setBackground(new Color(255,153,51));
 		
 	}
 	

@@ -9,11 +9,13 @@ import javax.swing.border.EmptyBorder;
 
 import controller.HomeController;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
 
 public class Home extends JFrame {
 
@@ -41,11 +43,33 @@ public class Home extends JFrame {
 	public Home() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1024, 600);
+		setBounds(100, 100, 1224, 600);
 		pnHome = new JPanel();
 		pnHome.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(pnHome);
 		pnHome.setLayout(null);
+		
+		JPanel pnLogin = new JPanel();
+		pnLogin.setBounds(88, 107, 793, 398);
+		pnLogin.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+//		pnHome.add(pnLogin);
+		pnLogin.setLayout(new BorderLayout(0, 0));
+		
+		JPanel pnTitle = new JPanel();
+		pnLogin.add(pnTitle, BorderLayout.NORTH);
+		pnTitle.setLayout(new BorderLayout(0, 0));
+		
+		pnTitle.add(Box.createVerticalStrut(20),BorderLayout.WEST);
+		
+		JLabel lblTitle = new JLabel("Management - Login");
+		lblTitle.setFont(new Font("Tahoma", Font.PLAIN, 14));
+//		lblTitle.setBounds(20, 0, 200, 20);
+		pnTitle.add(lblTitle, BorderLayout.WEST);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pnTitle.add(btnBack, BorderLayout.EAST);
 		
 //		************************************************
 //		xu ly su kien
@@ -68,5 +92,4 @@ public class Home extends JFrame {
 		order.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		order.setVisible(true);
 	}
-
 }

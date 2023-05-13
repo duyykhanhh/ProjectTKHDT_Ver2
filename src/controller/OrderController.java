@@ -17,10 +17,9 @@ public class OrderController implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		String beverage;
-		ArrayList<String> toppings= new ArrayList<>();
-		beverage=e.getActionCommand();
-		
+		String str;
+		str=e.getActionCommand();
+	
 	}
 
 }

@@ -2,7 +2,7 @@ package MilkTeaStore;
 
 import java.util.ArrayList;
 
-public class SoftDrink extends Drink{
+public class SoftDrink extends Beverage{
 	private double price= 12000;
 	public SoftDrink() {
 	
@@ -10,10 +10,10 @@ public class SoftDrink extends Drink{
 	}
 
 	@Override
-	public String getDiscription() {
-		// TODO Auto-generated method stub
-		return "Soft drink";
+	public String getDescription() {
+		return "SoftDrink";
 	}
+
 
 	@Override
 	public double getPrice() {
@@ -21,9 +21,5 @@ public class SoftDrink extends Drink{
 		return this.price;
 	}
 
-	@Override
-	public void addTopping(Drink dr, ArrayList<String> toppings) {
-		// TODO Auto-generated method stub
-		
-	}
+
 }

@@ -2,30 +2,32 @@ package MilkTeaStore;
 
 import java.util.ArrayList;
 
-public class Pearl extends ToppingDecorator{
+public class Pearl extends Topping {
 	private double price=3000;
-	public Pearl(Drink drink) {
-		super(drink);
-		// TODO Auto-generated constructor stub
+	public Pearl() {
+
+	}
+
+	public Pearl(int quantity) {
+		super(quantity);
 	}
 
 	@Override
 	public String getDiscription() {
 		// TODO Auto-generated method stub
-		return drink.getDiscription() + " Pearl ";
+		return " Pearl ";
 	}
 
-	@Override
 	public double getPrice() {
 		// TODO Auto-generated method stub
-		return drink.getPrice() + price;
+		return price;
 	}
 
-	@Override
-	public void addTopping(Drink dr, ArrayList<String> toppings) {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public void addTopping(Drink dr, ArrayList<String> toppings) {
+//		// TODO Auto-generated method stub
+//
+//	}
 	
 
 }

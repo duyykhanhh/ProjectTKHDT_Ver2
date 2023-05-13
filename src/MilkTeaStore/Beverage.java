@@ -2,45 +2,51 @@ package MilkTeaStore;
 
 import java.util.ArrayList;
 
-public class Beverage {
-	private Drink drink;
+public abstract class Beverage {
+
 	private IFlavourStrategy flavour;
 	private ISizeStrategy size;
 	private IPriceStrategy priceStrategy;
-//	private boolean isOwnCup;
-	public Beverage() {
-		
-	}
+	private ToppingFactory toppingFactory;
+	private ArrayList<Topping> toppingList;
 
-	public Beverage(Drink drink, IFlavourStrategy flavour, ISizeStrategy size) {
+//	private boolean isOwnCup;
+public Beverage() {
+
+}
+
+	public Beverage(IFlavourStrategy flavour, ISizeStrategy size, ToppingFactory toppingFactory) {
 		super();
-		this.drink = drink;
+
 		this.flavour = flavour;
 		this.size = size;
 		this.priceStrategy = new NormalPrice();
+		this.toppingFactory = toppingFactory;
 //		this.isOwnCup = isOwnCup;
 	}
 
-	public String getDescription() {
-		return drink.getDiscription();
-	}
+//	public String getDescription() {
+//		return drink.getDiscription();
+//	}
+public abstract String getDescription();
+
 	public double getPrice() {
-		return priceStrategy.getPrice(size.getPrice() * (drink.getPrice() + flavour.getPrice()))  ;
+		return priceStrategy.getPrice(size.getPrice() * (this.getPrice() + flavour.getPrice()))  ;
 
 	}
+
 	public double getPoint() {
-		return priceStrategy.getPoint(size.getPrice() * (drink.getPrice() + flavour.getPrice()));
-		
+		return priceStrategy.getPoint(size.getPrice() * (this.getPrice() + flavour.getPrice()));
+
 	}
-	
-	
-	
+
+
 //	cac method ho tro order nuoc
 //	*************************************
 
-public Drink getDrink() {
-		return drink;
-	}
+//public Drink getDrink() {
+//		return drink;
+//	}
 
 //	public void setDrink(Drink drink) {
 //		this.drink = drink;
@@ -79,19 +85,19 @@ public Drink getDrink() {
 //	}
 
 	//	loai nuoc
-	public void setDrink(String kind) {
-		if(kind.equals("Milktea"))
-			this.drink= new MilkTea();
-		else if(kind.equals("Coffee"))
-			this.drink= new Coffee();
-		else if(kind.equals("Softdrink"))
-			this.drink= new SoftDrink();
-		else if(kind.equals("Juice"))
-			this.drink= new Juice();
-	}
-	
-	
-//	huong vi
+//	public void setDrink(String kind) {
+//		if(kind.equals("Milktea"))
+//			this.drink= new MilkTea();
+//		else if(kind.equals("Coffee"))
+//			this.drink= new Coffee();
+//		else if(kind.equals("Softdrink"))
+//			this.drink= new SoftDrink();
+//		else if(kind.equals("Juice"))
+//			this.drink= new Juice();
+//	}
+
+
+	//	huong vi
 	public void setFlavour(String flavour) {
 		if(flavour.equals("Chocolate"))
 			this.flavour= new ChocolateFlavour();
@@ -104,11 +110,9 @@ public Drink getDrink() {
 		else if(flavour.equals("Lemonade"))
 			this.flavour= new LemonadeFlavour();
 	}
-	
 
-	
-	
-//	size
+
+	//	size
 	public void setSize(String size) {
 		if(size.equals("S"))
 			this.size= new Small();
@@ -117,29 +121,23 @@ public Drink getDrink() {
 		else if(size.equals("L"))
 			this.size= new Large();
 	}
-	
-//	them topping
-	public void addTopping(Beverage be, ArrayList<String> toppings) {
-		if(be.getDrink() instanceof MilkTea)
-			this.getDrink().addTopping(be.getDrink(), toppings);
+
+	//	them topping
+	public void addTopping(String toppingName,int quantity) {
+		Topping topping = toppingFactory.createTopping(toppingName,quantity);
+		toppingList.add(topping);
 	}
-	
-	
+
+
 //	dat nuoc
-	public Beverage orderBeverage(String kind, String flavour, String size) {
-		Beverage beverage= new Beverage();
-		beverage.setDrink(kind);
-		beverage.setFlavour(flavour);
-		beverage.setSize(size);
-		return beverage;
-	}
-	
-	
-
-	
-
-	
-
+//	public Beverage orderBeverage(String kind, String flavour, String size) {
+//		Beverage beverage= new Beverage();
+//		beverage.setDrink(kind);
+//		beverage.setFlavour(flavour);
+//		beverage.setSize(size);
+//		return beverage;
+//	}
+//
 
 
 }

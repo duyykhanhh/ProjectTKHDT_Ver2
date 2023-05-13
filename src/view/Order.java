@@ -16,11 +16,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import MilkTeaStore.Beverage;
-import MilkTeaStore.Drink;
-import MilkTeaStore.IFlavourStrategy;
-import MilkTeaStore.ISizeStrategy;
-import controller.HomeController;
 import controller.OrderController;
 
 import javax.swing.JLabel;
@@ -28,7 +23,6 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
-import javax.swing.JColorChooser;
 
 import java.awt.Font;
 import java.awt.Component;
@@ -38,9 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.CardLayout;
 import java.awt.Color;
 
-import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
-import javax.swing.JRadioButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 

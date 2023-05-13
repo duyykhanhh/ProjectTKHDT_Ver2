@@ -2,22 +2,22 @@ package MilkTeaStore;
 
 import java.util.ArrayList;
 
-public class Coffee extends Drink{
+public class Coffee extends Beverage{
 	private double price=15000;
+	private boolean isIce;
 	public Coffee() {
 	
 		// TODO Auto-generated constructor stub
 	}
 
-
-
-	private boolean isIce;
-
 	@Override
-	public String getDiscription() {
-		// TODO Auto-generated method stub
-		return " Coffee ";
+	public String getDescription() {
+		return " Coffe ";
 	}
+
+
+
+
 
 	@Override
 	public double getPrice() {
@@ -33,9 +33,5 @@ public class Coffee extends Drink{
 		return isIce;
 	}
 
-	@Override
-	public void addTopping(Drink dr, ArrayList<String> toppings) {
-		// TODO Auto-generated method stub
-		
-	}
+
 }

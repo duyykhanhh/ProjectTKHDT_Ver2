@@ -13,7 +13,7 @@ public class WaiterService implements IServiceObserver{
 	}
 
 	@Override
-	public void update(String cusId, List<Drink> drinks, String table) {
+	public void update(String cusId, List<Beverage> drinks, String table) {
 		// TODO Auto-generated method stub
 		this.table=table;
 		this.DeliveryDrink();

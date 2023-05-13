@@ -11,7 +11,7 @@ public class MailService implements IServiceObserver{
 		orderData.registerServer(this);
 	}
 	@Override
-	public void update(String cusId, List<Drink> drinks, String address) {
+	public void update(String cusId, List<Beverage> drinks, String address) {
 		// TODO Auto-generated method stub
 		
 	}

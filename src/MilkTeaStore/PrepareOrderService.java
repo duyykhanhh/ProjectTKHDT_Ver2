@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PrepareOrderService implements IServiceObserver{
 	private OrderData orderData;
-	private List<Drink> drinks= new ArrayList<>();
+	private List<Beverage> drinks= new ArrayList<>();
 	
 	public PrepareOrderService(OrderData orderData) {
 		super();
@@ -15,7 +15,7 @@ public class PrepareOrderService implements IServiceObserver{
 	}
 
 	@Override
-	public void update(String cusId, List<Drink> drinks, String address) {
+	public void update(String cusId, List<Beverage> drinks, String address) {
 		// TODO Auto-generated method stub
 		this.drinks= drinks;
 		this.prepareOrder();

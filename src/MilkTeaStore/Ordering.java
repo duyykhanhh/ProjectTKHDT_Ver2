@@ -3,12 +3,9 @@ package MilkTeaStore;
 import java.sql.Date;
 import java.util.List;
 
-import javax.management.DescriptorAccess;
-import javax.xml.crypto.Data;
-
 public class Ordering implements IServiceObserver{
 	private String cusId;
-	private List<Drink> drinks;
+	private List<Beverage> drinks;
 	private IPayStrategy pay;
 	private String table;
 
@@ -22,7 +19,7 @@ public class Ordering implements IServiceObserver{
 	}
 
 	@Override
-	public void update(String cusId, List<Drink> drinks, String table) {
+	public void update(String cusId, List<Beverage> drinks, String table) {
 		// TODO Auto-generated method stub
 
 	}
@@ -31,7 +28,7 @@ public class Ordering implements IServiceObserver{
 		return cusId;
 	}
 
-	public List<Drink> getDrinks() {
+	public List<Beverage> getDrinks() {
 		return drinks;
 	}
 
@@ -42,9 +39,9 @@ public class Ordering implements IServiceObserver{
 	public String getTable(){ return table;}
 
 	//chuyển đơn hàng lên orderData
-	public void setOrderData(String cusId, List<Drink> drinks, String table) {
+	public void setOrderData(String cusId, List<Beverage> beverages, String table) {
 		orderData.setCusId(cusId);
-		orderData.setDrinks(drinks);
+		orderData.setBeverages(beverages);
 //		orderData.setAddress(table);
 
 		//kêu cái orderData thông báo cho mấy cái service

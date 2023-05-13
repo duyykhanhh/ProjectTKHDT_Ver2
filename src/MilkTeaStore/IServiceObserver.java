@@ -4,5 +4,5 @@ import java.beans.Customizer;
 import java.util.List;
 
 public interface IServiceObserver {
-	public void update(String cusId, List<Drink> drinks, String address);
+	public void update(String cusId, List<Beverage> drinks, String address);
 }

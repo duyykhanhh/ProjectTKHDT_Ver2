@@ -1,17 +1,16 @@
 package MilkTeaStore;
 
-import java.beans.Customizer;
 import java.util.List;
 
 public class OrderData implements IServiceObservable{
 	private String cusId;
-	private List<Drink> drinks;
+	private List<Beverage> beverages;
 	private String table;
 	private List<IServiceObserver> services;
-	public OrderData(String cusId, List<Drink> drinks, String table, List<IServiceObserver> services) {
+	public OrderData(String cusId, List<Beverage> drinks, String table, List<IServiceObserver> services) {
 		super();
 		this.cusId = cusId;
-		this.drinks = drinks;
+		this.beverages = drinks;
 		this.table = table;
 		this.services = services;
 	}
@@ -30,8 +29,8 @@ public class OrderData implements IServiceObservable{
 	public String getCusId() {
 		return cusId;
 	}
-	public List<Drink> getDrinks() {
-		return drinks;
+	public List<Beverage> getBeverages() {
+		return beverages;
 	}
 	public String getTable() {
 		return table;
@@ -40,13 +39,13 @@ public class OrderData implements IServiceObservable{
 	public void nofity() {
 		// TODO Auto-generated method stub
 		for(IServiceObserver oser: services)
-			oser.update(getCusId(), getDrinks(), getTable());
+			oser.update(getCusId(), getBeverages(), getTable());
 	}
 	public void setCusId(String cusId) {
 		this.cusId = cusId;
 	}
-	public void setDrinks(List<Drink> drinks) {
-		this.drinks = drinks;
+	public void setBeverages(List<Beverage> beverages) {
+		this.beverages = beverages;
 	}
 	public void setTable(String table) {
 		this.table = table;

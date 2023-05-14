@@ -3,10 +3,14 @@ package MilkTeaStore;
 import java.util.ArrayList;
 
 public class SoftDrink extends Beverage{
-	private double price= 12000;
+
 	public SoftDrink() {
 	
 		// TODO Auto-generated constructor stub
+	}
+
+	public SoftDrink(IFlavourStrategy flavour, ISizeStrategy size) {
+		super(3000, flavour, size);
 	}
 
 	@Override
@@ -15,11 +19,7 @@ public class SoftDrink extends Beverage{
 	}
 
 
-	@Override
-	public double getPrice() {
-		// TODO Auto-generated method stub
-		return this.price;
-	}
+
 
 
 }

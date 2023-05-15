@@ -2,8 +2,8 @@ package MilkTeaStore;
 
 public class Flavor {
 	private static double chocolatePrice = 5000;
-	private static double mathcaPrice = 5000;
-	private static double taroPrice = 5000;
+	private static double mathcaPrice = 6000;
+	private static double taroPrice = 7000;
 
 public static String getFlavorDescription(Object o) {
 	if(o instanceof ChocolateFlavour) {

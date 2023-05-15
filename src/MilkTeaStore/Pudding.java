@@ -8,9 +8,13 @@ public class Pudding extends Topping {
 
     }
 
-    public Pudding(int quantity) {
-        super(quantity);
+//    public Pudding(int quantity) {
+//        super(price,quantity);
+//
+//    }
 
+    public Pudding( int quantity) {
+        super(quantity);
     }
 
     @Override
@@ -21,7 +25,8 @@ public class Pudding extends Topping {
 
     @Override
     public double getPrice() {
-        return price;
+
+        return price*getQuantity();
     }
 
 

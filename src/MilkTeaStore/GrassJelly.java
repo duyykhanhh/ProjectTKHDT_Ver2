@@ -22,7 +22,7 @@ public class GrassJelly extends Topping {
 	@Override
 	public double getPrice() {
 		// TODO Auto-generated method stub
-		return  price;
+		return  price*getQuantity();
 	}
 
 

@@ -32,13 +32,23 @@ public Beverage() {
 //		return drink.getDiscription();
 //	}
 public abstract String getDescription();
+public String getFullDescription(){
+	StringBuilder sb = new StringBuilder();
+	sb.append(getDescription());
+	sb.append(flavour.getFlavorDiscription()+" ");
+	for(Topping topping: toppingList){
+		sb.append(" "+topping.getDiscription()+"x"+topping.getQuantity()+" ");
+	}
+    sb.append(size.getSize());
+	return sb.toString();
+}
 
 	public double getTotalPrice() {
 		double toppingPrice = 0;
 		for(Topping topping : toppingList){
 			toppingPrice+=topping.getPrice();
 		}
-		return priceStrategy.getPrice(size.getPrice() * ( flavour.getPrice())+toppingPrice)  ;
+		return priceStrategy.getPrice(size.getPrice() * ( flavour.getPrice()))+toppingPrice ;
 
 //		return priceStrategy.getPrice(5000);
 

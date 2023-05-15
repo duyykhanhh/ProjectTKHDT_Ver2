@@ -1,7 +1,8 @@
 package MilkTeaStore;
 
 public abstract class Topping {
-private int quantity;
+
+    private int quantity;
 
 
 //	public ToppingDecorator(ISizeStrategy size, IPriceStrategy pricePercentage, IFlavorStrategy flavor,
@@ -10,21 +11,26 @@ private int quantity;
 //		this.drink = drink;
 //	}
 
-	public Topping() {
+    public Topping() {
 
-	}
-	public Topping(int quantity){
-		this.quantity = quantity;
-	}
+    }
 
-	public abstract String getDiscription();
-	public abstract double getPrice();
+    public Topping( int quantity) {
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
+        this.quantity = quantity;
+    }
 
-	public int getQuantity() {
-		return quantity;
-	}
+    public abstract String getDiscription();
+
+    public abstract double getPrice();
+
+
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
 }

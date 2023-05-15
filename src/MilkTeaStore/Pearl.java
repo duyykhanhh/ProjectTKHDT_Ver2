@@ -20,7 +20,7 @@ public class Pearl extends Topping {
 
 	public double getPrice() {
 		// TODO Auto-generated method stub
-		return price;
+		return price*getQuantity();
 	}
 
 //	@Override

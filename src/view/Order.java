@@ -53,10 +53,12 @@ public class Order extends JFrame {
 //	private Drink dr;
 //	private ISizeStrategy size;
 //private String  size, flavour, topping;
-private String dr = "";
-private String size = "";
-private String flavour = "";
-private String topping = "";
+	double totalPrice=0;
+ String dr ;
+ String size = "";
+ String flavour = "";
+ String topping = "";
+ JLabel beverageType;
 
 	private ArrayList<String> toppings;
 	private ArrayList<String> beverage;
@@ -84,6 +86,7 @@ private String topping = "";
 	private JLabel lblNumOfPearl;
 	private JLabel lblNumOfPudding;
 	private JLabel lblNumOfGrassJelly;
+	Object[][] data;
 
 
 	/**
@@ -110,6 +113,14 @@ private String topping = "";
 	 * Create the frame.
 	 */
 	public Order() {
+		beverageType = new JLabel();
+//		countPearl=0;
+//		countPudding=0;
+//		countGrassJelly=0;
+//		private int countPearl;
+//		private int countPudding;
+//		private int countGrassJelly;
+
 		setTitle("Order");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1224, 600);
@@ -154,9 +165,9 @@ private String topping = "";
 //			}
 //		});
 
-		Object[][] data= {
-				{"1.Tra sua chan chau",20000, 4},
-		};
+		 data= new Object[][]{
+//				 {"1.Tra sua chan chau", 20000, 4}
+		 };
 
 		String[] column= {
 				"Product", "Price Unit", "Quantity"
@@ -197,10 +208,10 @@ private String topping = "";
 		lblTotalPrice = new JLabel("Total price:");
 		lblTotalPrice.setFont(new Font("Tahoma", Font.PLAIN, 17));
 
-		lblReTotal = new JLabel("9");
+		lblReTotal = new JLabel();
 		lblReTotal.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
-		lblRePrice = new JLabel("100000");
+		lblRePrice = new JLabel();
 		lblRePrice.setFont(new Font("Tahoma", Font.PLAIN, 17));
 
 		btnPay = new JButton("PAY");
@@ -284,6 +295,8 @@ private String topping = "";
 		btnMilktea = new JButton("Milktea");
 		btnMilktea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+//				beverageType.setText("Milktea");
+//				dr = "Milktea";
 				pressedCategory(btnMilktea);
 
 			}
@@ -301,6 +314,8 @@ private String topping = "";
 		btnCoffee = new JButton("Coffee");
 		btnCoffee.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+//				beverageType.setText("Coffee");
+//				dr = "Coffee";
 				pressedCategory(btnCoffee);
 			}
 		});
@@ -316,6 +331,8 @@ private String topping = "";
 		btnSoftDrink = new JButton("Softdrink");
 		btnSoftDrink.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+//				beverageType.setText("SoftDrink");
+//				dr = "SoftDrink";
 				pressedCategory(btnSoftDrink);
 			}
 		});
@@ -331,6 +348,8 @@ private String topping = "";
 		btnJuice = new JButton("Juice");
 		btnJuice.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+//				beverageType.setText("Juice");
+//				dr = "Juice";
 				pressedCategory(btnJuice);
 			}
 		});
@@ -393,30 +412,46 @@ private String topping = "";
 		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Beverage beverage = orderController.setBeverage("Milktea");
+				Beverage beverage = orderController.setBeverage(dr);
 				ArrayList<Topping> toppingList = new ArrayList<>();
-				ToppingFactory factory = new ToppingFactory();
+
+//				if(!lblNumOfPearl.getText().equalsIgnoreCase("0")){
 				Topping topping;
-				if(!lblNumOfPearl.getText().equalsIgnoreCase("0")){
+				if(countPearl!=0){
 //					Topping topping = factory.createTopping(btnPearl.getText(),Integer.parseInt(lblNumOfPearl.getText()));
 //					Topping topping = beverage.getToppingFactory().createTopping(btnPearl.getText(),Integer.parseInt(lblNumOfPearl.getText()));
-					topping = orderController.createTopping(btnPearl.getText(),Integer.parseInt(lblNumOfPearl.getText()));
+//					topping = orderController.createTopping(btnPearl.getText(),countPearl);
+					 topping = orderController.createTopping(btnPearl.getText(),countPearl);
+
 					toppingList.add(topping);
+
 				}
-				if(!lblNumOfPudding.getText().equalsIgnoreCase("0")){
+//				if(!lblNumOfPudding.getText().equalsIgnoreCase("0")){
+				if(countPudding!=0){
 //					Topping topping = factory.createTopping(btnPudding.getText(),Integer.parseInt(lblNumOfPudding.getText()));
 //					Topping topping = beverage.getToppingFactory().createTopping(btnPudding.getText(),Integer.parseInt(lblNumOfPudding.getText()));
-					topping = orderController.createTopping(btnPudding.getText(),Integer.parseInt(lblNumOfPudding.getText()));
+//					topping = orderController.createTopping(btnPudding.getText(),countPudding);
+				topping = orderController.createTopping(btnPudding.getText(),countPudding);
 
 					toppingList.add(topping);
 				}
-				if(!lblNumOfGrassJelly.getText().equalsIgnoreCase("0")){
+//				if(!lblNumOfGrassJelly.getText().equalsIgnoreCase("0")){
+				if(countGrassJelly!=0){
 //					Topping topping = factory.createTopping(btnGrassjelly.getText(),Integer.parseInt(lblNumOfGrassJelly.getText()));
 //					Topping topping = beverage.getToppingFactory().createTopping(btnGrassjelly.getText(),Integer.parseInt(lblNumOfGrassJelly.getText()));
-					topping = orderController.createTopping(btnGrassjelly.getText(),Integer.parseInt(lblNumOfGrassJelly.getText()));
+//					topping = orderController.createTopping(btnGrassjelly.getText(),countGrassJelly);
+					 topping = orderController.createTopping(btnGrassjelly.getText(),countGrassJelly);
+
 					toppingList.add(topping);
 				}
-				lblRePrice.setText(String.valueOf(orderController.getTotalPrice(beverage,flavour,toppingList,size)));
+
+				double price = orderController.getTotalPrice(beverage,flavour,toppingList,size);
+				totalPrice += price;
+				lblRePrice.setText(String.valueOf(totalPrice));
+				model.addRow(new Object[]{beverage.getFullDescription(),price});
+				lblReTotal.setText(String.valueOf(model.getRowCount()));
+
+
 
 			}
 		});
@@ -818,6 +853,19 @@ private String topping = "";
 //	 xu ly du lieu
 public void getCategory(JButton btn) {
 	dr = btn.getText();
+//	beverageType.setText(btn.getText());
+//	if(btn == btnMilktea){
+//		dr = "Milktea";
+//	}
+//	else if(btn == btnCoffee){
+//		dr ="Coffee";
+//	}
+//	else if(btn == btnSoftDrink){
+//		dr ="SoftDrink";
+//	}
+//	else if(btn == btnJuice){
+//		dr = "Juice";
+//	}
 }
 
 	public void pressedCategory(JButton btn) {

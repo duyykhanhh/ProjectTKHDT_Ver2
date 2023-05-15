@@ -33,7 +33,8 @@ public class Management extends JFrame {
 	public Management() {
 		setTitle("Management");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1024, 600);
+		setBounds(0, 0, 1224, 600);
+		setLocationRelativeTo(null);
 		pnManagement = new JPanel();
 		pnManagement.setBorder(new EmptyBorder(5, 5, 5, 5));
 		pnManagement.setLayout(new BorderLayout(0, 0));
@@ -41,5 +42,7 @@ public class Management extends JFrame {
 		
 
 	}
+	
+	
 
 }

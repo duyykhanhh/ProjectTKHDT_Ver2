@@ -1,5 +1,6 @@
 package view;
 
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -103,7 +104,9 @@ public class Order extends JFrame {
 	public Order() {
 		setTitle("Order");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1224, 600);
+		setBounds(0, 0, 1224, 600);
+		setLocationRelativeTo(null);
+
 		pnOrder = new JPanel();
 		pnOrder.setBorder(new EmptyBorder(5, 5, 5, 5));
 		pnOrder.setLayout(new BorderLayout(0, 0));

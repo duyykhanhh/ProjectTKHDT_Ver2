@@ -3,11 +3,15 @@ package MilkTeaStore;
 import java.util.ArrayList;
 
 public class Coffee extends Beverage{
-	private double price=15000;
+//	private double price=15000;
 	private boolean isIce;
 	public Coffee() {
 	
 		// TODO Auto-generated constructor stub
+	}
+
+	public Coffee( IFlavourStrategy flavour, ISizeStrategy size) {
+		super(6000, flavour, size);
 	}
 
 	@Override
@@ -19,11 +23,7 @@ public class Coffee extends Beverage{
 
 
 
-	@Override
-	public double getPrice() {
-		// TODO Auto-generated method stub
-		return price;
-	}
+
 
 	public void setIce(boolean ice) {
 		isIce = ice;

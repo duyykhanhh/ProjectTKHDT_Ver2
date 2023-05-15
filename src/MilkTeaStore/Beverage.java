@@ -3,25 +3,28 @@ package MilkTeaStore;
 import java.util.ArrayList;
 
 public abstract class Beverage {
-
+	private double price;
 	private IFlavourStrategy flavour;
 	private ISizeStrategy size;
-	private IPriceStrategy priceStrategy;
-	private ToppingFactory toppingFactory;
-	private ArrayList<Topping> toppingList;
+	private IPriceStrategy priceStrategy = new NormalPrice();
+	private ToppingFactory toppingFactory = new ToppingFactory();
+	private ArrayList<Topping> toppingList = new ArrayList<Topping>();
 
 //	private boolean isOwnCup;
 public Beverage() {
 
 }
-
-	public Beverage(IFlavourStrategy flavour, ISizeStrategy size, ToppingFactory toppingFactory) {
+	public Beverage(double price,IFlavourStrategy flavour, ISizeStrategy size) {
 		super();
-
+        this.price = price;
 		this.flavour = flavour;
 		this.size = size;
-		this.priceStrategy = new NormalPrice();
-		this.toppingFactory = toppingFactory;
+//		this.size = new Small();
+//		this.flavour = new ChocolateFlavour();
+
+//		this.priceStrategy = new NormalPrice();
+
+
 //		this.isOwnCup = isOwnCup;
 	}
 
@@ -30,8 +33,19 @@ public Beverage() {
 //	}
 public abstract String getDescription();
 
-	public double getPrice() {
-		return priceStrategy.getPrice(size.getPrice() * (this.getPrice() + flavour.getPrice()))  ;
+	public double getTotalPrice() {
+		double toppingPrice = 0;
+		for(Topping topping : toppingList){
+			toppingPrice+=topping.getPrice();
+		}
+		return priceStrategy.getPrice(size.getPrice() * ( flavour.getPrice())+toppingPrice)  ;
+
+//		return priceStrategy.getPrice(5000);
+
+
+
+
+
 
 	}
 
@@ -40,6 +54,13 @@ public abstract String getDescription();
 
 	}
 
+	public double getPrice() {
+		return 5000;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
 
 //	cac method ho tro order nuoc
 //	*************************************
@@ -114,11 +135,11 @@ public abstract String getDescription();
 
 	//	size
 	public void setSize(String size) {
-		if(size.equals("S"))
+		if(size.equalsIgnoreCase("S"))
 			this.size= new Small();
-		else if(size.equals("M"))
+		else if(size.equalsIgnoreCase("M"))
 			this.size= new Medium();
-		else if(size.equals("L"))
+		else if(size.equalsIgnoreCase("L"))
 			this.size= new Large();
 	}
 
@@ -126,6 +147,23 @@ public abstract String getDescription();
 	public void addTopping(String toppingName,int quantity) {
 		Topping topping = toppingFactory.createTopping(toppingName,quantity);
 		toppingList.add(topping);
+	}
+   public void addTopping(Topping topping){
+		toppingList.add(topping);
+   }
+
+
+
+
+
+	public ToppingFactory getToppingFactory() {
+		return toppingFactory;
+	}
+
+
+
+	public ArrayList<Topping> getToppingList() {
+		return toppingList;
 	}
 
 

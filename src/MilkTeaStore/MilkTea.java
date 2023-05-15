@@ -3,9 +3,13 @@ package MilkTeaStore;
 import java.util.ArrayList;
 
 public class MilkTea extends Beverage{
-	private double price= 13000;
+//	private double price= 13000;
 	public MilkTea() {
 		
+	}
+
+	public MilkTea( IFlavourStrategy flavour, ISizeStrategy size) {
+		super(5000, flavour, size);
 	}
 
 	@Override
@@ -14,11 +18,7 @@ public class MilkTea extends Beverage{
 	}
 
 
-	@Override
-	public double getPrice() {
-		// TODO Auto-generated method stub
-		return price;
-	}
+
 
 
 

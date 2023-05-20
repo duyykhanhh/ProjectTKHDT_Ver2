@@ -24,6 +24,7 @@ public class PrepareOrderService implements IServiceObserver{
 
 	public void prepareOrder(){
 		System.out.println("Don nuoc: " + this.drinks.toString() + " dang duoc thuc hien");
+	
 	}
 	
 }

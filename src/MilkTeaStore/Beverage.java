@@ -38,6 +38,7 @@ public String getFullDescription(){
 	sb.append(flavour.getFlavorDiscription()+" ");
 	for(Topping topping: toppingList){
 		sb.append(" "+topping.getDiscription()+"x"+topping.getQuantity()+" ");
+
 	}
     sb.append(size.getSize());
 	return sb.toString();
@@ -185,6 +186,8 @@ public String getFullDescription(){
 //		beverage.setSize(size);
 //		return beverage;
 //	}
+	
+	
 //
 
 

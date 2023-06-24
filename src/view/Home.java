@@ -20,6 +20,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.CardLayout;
@@ -27,6 +28,10 @@ import java.awt.GridLayout;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.border.LineBorder;
+
+import MilkTeaStore.Employee;
+import MilkTeaStore.FileRW;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -53,7 +58,7 @@ public class Home extends JFrame {
 	private JPanel pnTitle;
 	private JLabel lblTitle;
 	private JButton btnBack;
-
+	private FileRW file;
 	/**
 	 * Launch the application.
 	 */
@@ -74,6 +79,8 @@ public class Home extends JFrame {
 	 * Create the frame.
 	 */
 	public Home() {
+		file = new FileRW("src/employee");
+		
 		setTitle("Home");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -269,6 +276,15 @@ public class Home extends JFrame {
 		pnLoginMain.setBackground(new Color(255, 235, 205));
 	}
 	
+	public void goToManagement() {
+		String user = "";
+		user = this.getTxtID().getText();
+		Management mn= new Management();
+		mn.getLblUser().setText(user);
+		mn.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		mn.setVisible(true);
+	}
+	
 	public JButton getBtnOrder() {
 		return btnOrder;
 	}
@@ -294,6 +310,7 @@ public class Home extends JFrame {
 		return txtID.getText();
 	}
 	
+
 //	private int[] encryptPwd() {
 //		char[] pwd=txtPassword.getPassword();
 //		int[] num= new int[pwd.length];
@@ -315,4 +332,48 @@ public class Home extends JFrame {
 		String result= new String(pwd);
 		return result;
 	}
+
+	public JTextField getTxtID() {
+		return txtID;
+	}
+	
+	public boolean checkLogin(String id, String pwd) {
+		List<Employee> ems = this.getEms();
+		if(id.equals("root") && pwd.equals("123456"))
+			return true;
+		for(Employee em : ems) {
+			String id2 = em.getEmID();
+			String pwd2 = em.getPwd();
+			if(id.equals(id2) && pwd.equals(pwd2))
+				return true;
+
+		}
+		return false;
+	}
+	
+	public JPasswordField getTxtPassword() {
+		return txtPassword;
+	}
+
+	public void setTxtPassword(JPasswordField txtPassword) {
+		this.txtPassword = txtPassword;
+	}
+
+	public void setTxtID(JTextField txtID) {
+		this.txtID = txtID;
+	}
+
+	public List<Employee> getEms(){
+		return file.readEm();
+		
+	}
+	
+	public void clearLogin() {
+		this.txtID.setText("");
+		this.txtPassword.setText("");
+	}
+
+
+	
+	
 }

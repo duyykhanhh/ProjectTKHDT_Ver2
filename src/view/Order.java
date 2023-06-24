@@ -83,6 +83,7 @@ public class Order extends JFrame {
 
 
 	//	khai bao thanh phan giao dien
+	
 	private JPanel pnOrder,pnProduct,pnPay,pnCustom,pnCustomOK, pnCoffeeFlavour;
 	private JTable tblProductInfo;
 	private JScrollPane sp;
@@ -194,7 +195,7 @@ public class Order extends JFrame {
 		 };
 
 		String[] column= {
-				"Product", "Price Unit", "Quantity"
+				"Product", "Price Unit", "Qty"
 		};
 
 
@@ -204,9 +205,9 @@ public class Order extends JFrame {
 		tblProductInfo.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField()));
 		
 		TableColumnModel columnModel = tblProductInfo.getColumnModel();
-		 columnModel.getColumn(0).setPreferredWidth(240); 
+		 columnModel.getColumn(0).setPreferredWidth(220); 
 	     columnModel.getColumn(1).setPreferredWidth(60);  
-	     columnModel.getColumn(2).setPreferredWidth(20);  
+	     columnModel.getColumn(2).setPreferredWidth(40);  
 	    
 	      DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer() {
 	            @Override

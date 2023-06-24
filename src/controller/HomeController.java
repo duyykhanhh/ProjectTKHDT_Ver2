@@ -6,22 +6,32 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.JOptionPane;
+
+import MilkTeaStore.Employee;
+import MilkTeaStore.Login;
 import view.Home;
+import view.Management;
 
 public class HomeController implements ActionListener, MouseListener{
 	private Home homeView;
+	private Management managementView;
+
 	
 	
 	public HomeController(Home homeView) {
 		super();
 		this.homeView = homeView;
+//		this.managementView = new Management();
+		
 	}
 
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		String src= e.getActionCommand();
 		if(src.equals("ORDER"))
 			this.homeView.openOrder();
@@ -30,12 +40,21 @@ public class HomeController implements ActionListener, MouseListener{
 		if(src.equals("Back"))
 			this.homeView.backToHome();
 //		dang test log in va da thanh cong, hay chinh sua lai mot vai cho de tiep tuc
-		if(src.equals("Log in"))
-			if(this.homeView.getPassword().equals("123456"))
-					this.homeView.backToHome();
+		if(src.equals("Log in")) {
+			String id = this.homeView.getTxtID().getText();
+			String pwd = this.homeView.getPassword();
+			boolean pass = this.homeView.checkLogin(id, pwd);
+			if(pass == true) {
+				this.homeView.goToManagement();
+				this.homeView.clearLogin();
+			}
+				
 		
-			else 
-				this.homeView.openOrder();
+			else
+		        JOptionPane.showMessageDialog(null, "Wrong inputs, please check.", "Message", JOptionPane.INFORMATION_MESSAGE);	
+		}
+
+				
 	}
 
 	@Override
@@ -54,8 +73,7 @@ public class HomeController implements ActionListener, MouseListener{
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
-	}
+			}
 
 
 	@Override
@@ -87,5 +105,9 @@ public class HomeController implements ActionListener, MouseListener{
 			homeView.hoverOut(homeView.getBtnLogin());
 		
 	}
+	
+//	public String getUser() {
+//		return user;
+//	}
 
 }

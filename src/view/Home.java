@@ -79,7 +79,7 @@ public class Home extends JFrame {
 	 * Create the frame.
 	 */
 	public Home() {
-		file = new FileRW("src/employee");
+		file = new FileRW("src/data/employee");
 		
 		setTitle("Home");
 		

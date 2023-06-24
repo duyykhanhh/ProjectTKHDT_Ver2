@@ -149,16 +149,15 @@ public class Management extends JFrame {
 	 * Create the frame.
 	 */
 	public Management() {
-		this.fileEm = new FileRW("src/employee");
+		this.fileEm = new FileRW("src/data/employee");
 		ems = this.fileEm.readEm();
-		this.fileCus = new FileRW("src/customer");
+		this.fileCus = new FileRW("src/data/customer");
 		cuses = this.fileCus.readCus();
-		this.fileIngre = new FileRW("src/ingredient");
+		this.fileIngre = new FileRW("src/data/ingredient");
 		ins = this.fileIngre.readIngre();
-		this.fileToday = new FileRW("src/revenueToday");
+		this.fileToday = new FileRW("src/data/revenueToday");
 		todays = this.fileToday.readToday();
-//		this.newRevenueDay();
-		this.fileTotal = new FileRW("src/revenueTotal");
+		this.fileTotal = new FileRW("src/data/revenueTotal");
 		totals = this.fileTotal.readTotal();
 		
 		

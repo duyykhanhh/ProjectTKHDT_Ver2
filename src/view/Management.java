@@ -19,6 +19,7 @@ import MilkTeaStore.Datee;
 import MilkTeaStore.Employee;
 import MilkTeaStore.FileRW;
 import MilkTeaStore.Ingredient;
+import MilkTeaStore.MilkTeaStore;
 import MilkTeaStore.RevenueToday;
 import MilkTeaStore.RevenueTotal;
 import controller.HomeController;
@@ -105,12 +106,7 @@ public class Management extends JFrame {
 	private double reToday=0;
 	private double reTotal=0;
 	private HomeController home;
-	private List<Employee> ems = new ArrayList<>();
-	private List<Customer> cuses = new ArrayList<>();
-	private List<Ingredient> ins = new ArrayList<>();
-	private List<RevenueToday> todays = new ArrayList<>();
-	private List<RevenueTotal> totals = new ArrayList<>();
-	private FileRW fileEm, fileCus, fileIngre, fileToday, fileTotal;
+
 	private JPanel pnAddCus;
 	private JTextField txtCusId;
 	private JPasswordField txtCusPwd;
@@ -119,6 +115,18 @@ public class Management extends JFrame {
 	private JLabel lblReToday;
 	private JLabel lblReMoney;
 	private JLabel lblReMoneyTotal;
+	private MilkTeaStore mn = new MilkTeaStore();
+//	private List<Ingredient> ins = mn.getIns();
+//	private List<Employee> ems = mn.getEms();
+//	private List<Customer> cuses = mn.getCuses();
+//	private List<RevenueToday> todays = mn.getTodays();
+//	private List<RevenueTotal> totals = mn.getTotals();
+	private FileRW fileEm, fileCus, fileIngre, fileToday, fileTotal;
+	private List<Ingredient> ins = new ArrayList<>();
+	private List<Employee> ems = new ArrayList<>();
+	private List<Customer> cuses = new ArrayList<>();
+	private List<RevenueToday> todays = new ArrayList<>();
+	private List<RevenueTotal> totals = new ArrayList<>();
 	
 
 	
@@ -149,16 +157,21 @@ public class Management extends JFrame {
 	 * Create the frame.
 	 */
 	public Management() {
-		this.fileEm = new FileRW("src/data/employee");
-		ems = this.fileEm.readEm();
-		this.fileCus = new FileRW("src/data/customer");
-		cuses = this.fileCus.readCus();
 		this.fileIngre = new FileRW("src/data/ingredient");
 		ins = this.fileIngre.readIngre();
+		mn.setIns(ins);
+		this.fileEm = new FileRW("src/data/employee");
+		ems = this.fileEm.readEm();
+		mn.setEms(ems);
+		this.fileCus = new FileRW("src/data/customer");
+		cuses = this.fileCus.readCus();
+		mn.setCuses(cuses);
 		this.fileToday = new FileRW("src/data/revenueToday");
 		todays = this.fileToday.readToday();
+		mn.setTodays(todays);
 		this.fileTotal = new FileRW("src/data/revenueTotal");
 		totals = this.fileTotal.readTotal();
+		mn.setTotals(totals);
 		
 		
 		
@@ -698,6 +711,7 @@ public class Management extends JFrame {
       );
       pnAddCus.setLayout(gl_pnAddCus);
       
+  
      
       
       pnCusBtnEdit = new JPanel();
@@ -1034,10 +1048,7 @@ public class Management extends JFrame {
 //		lblUser.setText(home.getUser());		
 		
 		
-		if(lblUser.getText().equals("root"))
-			btnAddIngr.setEnabled(true);
-		else
-			btnAddIngr.setEnabled(false);
+
 		
 		pnItem.add(Box.createVerticalStrut(20));
 		
@@ -1521,36 +1532,6 @@ public class Management extends JFrame {
 		this.lblUser.setText(user);
 	}
 	
-	public void writeEmToTable(List<Employee> ems) {
-//		ems = this.file.readEm();
-		for(Employee em : ems) {
-			String id = em.getEmID();
-			String name = em.getEmName();
-			int grade = em.getEmGrade();
-			boolean isWorking = em.isWork();
-			this.modelEm.addRow(new Object[]{id,name,grade,isWorking});
-		}
-
-	}
-	
-	public void addEm(Employee em) {
-		this.ems.add(em);
-		this.fileEm.writeEm(em);
-	}
-	
-	public void writeCusToTable(List<Customer> cuses) {
-		for(Customer cus : cuses) {
-			String id = cus.getCusId();
-			int point = cus.getPoint();
-			this.modelCus.addRow(new Object[] {id,point});
-		}
-	}
-	
-	public void addCus(Customer cus) {
-		this.cuses.add(cus);
-		this.fileCus.writeCus(cus);
-	}
-	
 	public void writeIngreToTable(List<Ingredient> ins) {
 		for(Ingredient in : ins) {
 			String name = in.getName();
@@ -1584,9 +1565,99 @@ public class Management extends JFrame {
 		else if(unit.equals("fruit")) {
 			in.setAmount(maxFruit);
 		}
+		
+		for(Ingredient ingre : mn.getIns())
+			if(ingre.equals(in))
+				ingre.setStock(true);
+		ins = mn.getIns();
+		fileIngre.writeIngreNew(ins.get(0));
+		for(int i =1; i<ins.size();i++) {
+			fileIngre.writeIngre(ins.get(i));
+		}
+		
 			
 		
 	}
+	
+	public void outOfIn(Ingredient in) {
+		for(Ingredient ingre : mn.getIns())
+			if(ingre.equals(in))
+				ingre.setStock(false);
+		ins = mn.getIns();
+		fileIngre.writeIngreNew(ins.get(0));
+		for(int i =1; i<ins.size();i++) {
+			fileIngre.writeIngre(ins.get(i));
+		}
+	}
+	
+	public void writeEmToTable(List<Employee> ems) {
+//		ems = this.file.readEm();
+		for(Employee em : ems) {
+			String id = em.getEmID();
+			String name = em.getEmName();
+			int grade = em.getEmGrade();
+			boolean isWorking = em.isWork();
+			this.modelEm.addRow(new Object[]{id,name,grade,isWorking});
+		}
+
+	}
+	public boolean checkExistedEm(String id) {
+		for(Employee em : mn.getEms()) {
+			if(em.getEmID().equalsIgnoreCase(id))
+				return true;
+			
+		}
+		
+		return false;
+	}
+	
+	
+	public void addEm(Employee em) {
+		this.ems.add(em);
+		this.fileEm.writeEm(em);
+	}
+	
+	public void stopEm(Employee em) {
+		em.setWork(false);
+		ems = mn.getEms();
+		fileEm.reWriteEm(ems);
+		
+	}
+	
+	public void upgradeEm(Employee em, int newGrade) {
+		em.setEmGrade(newGrade);
+		ems = mn.getEms();
+		fileEm.reWriteEm(ems);
+	}
+	
+
+	
+	public void writeCusToTable(List<Customer> cuses) {
+		for(Customer cus : cuses) {
+			String id = cus.getCusId();
+			int point = cus.getPoint();
+			this.modelCus.addRow(new Object[] {id,point});
+		}
+	}
+	
+	public boolean checkExistedCus(String id) {
+		for(Customer cus : mn.getCuses()) {
+			if(cus.getCusId().equalsIgnoreCase(id))
+				return true;
+			
+		}
+		
+		return false;
+	}
+	
+	public void addCus(Customer cus) {
+		this.cuses.add(cus);
+		this.fileCus.writeCus(cus);
+	}
+	
+	
+
+	
 	
 	public void writeTodayToTable(List<RevenueToday> todays) {
 		for(RevenueToday today : todays) {			
@@ -1804,6 +1875,14 @@ public class Management extends JFrame {
 
 	public JButton getBtnEndDay() {
 		return btnEndDay;
+	}
+
+	public MilkTeaStore getMn() {
+		return mn;
+	}
+
+	public void setMn(MilkTeaStore mn) {
+		this.mn = mn;
 	}
 	
 	

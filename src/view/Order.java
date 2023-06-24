@@ -27,6 +27,10 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import MilkTeaStore.Beverage;
+import MilkTeaStore.ChocolateFlavour;
+import MilkTeaStore.FileRW;
+import MilkTeaStore.Ingredient;
+import MilkTeaStore.MilkTeaStore;
 import MilkTeaStore.Topping;
 import MilkTeaStore.ToppingFactory;
 import controller.OrderController;
@@ -43,6 +47,7 @@ import java.awt.Insets;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.CardLayout;
@@ -103,6 +108,8 @@ public class Order extends JFrame {
 	private JPanel pnJuiceCustom, pnJuiceFlavour, pnJuiceSize;
 	private JButton btnOrange, btnLemonade;
 	private JButton btnJuiceS, btnJuiceM, btnJuiceL;
+	
+	private List<JButton> btnIngredient = new ArrayList<>();
 
 	//	bien ho tro doi mau btn Topping
 	private int countPearl=0;
@@ -121,6 +128,12 @@ public class Order extends JFrame {
 	private JButton btnPlus, btnMinus;
 	private JPanel pnNull;
 	private JLabel lblNull;
+	
+	private FileRW fileIngre;
+	private MilkTeaStore mn = new MilkTeaStore();
+	private List<Ingredient> ins=new ArrayList<>();
+	
+
 
 
 	/**
@@ -137,10 +150,24 @@ public class Order extends JFrame {
 				}
 			}
 		});
+		Order o = new Order();
+//		for(JButton btn : o.getBtnIngredient()) {
+//			System.out.println(btn.getText());
+//		}
 
 	}
 //	bang mau
 //	new Color(255, 204, 153) mau btnCategory mac dinh
+
+
+	public List<JButton> getBtnIngredient() {
+		return btnIngredient;
+	}
+
+
+	public void setBtnIngredient(List<JButton> btnIngredient) {
+		this.btnIngredient = btnIngredient;
+	}
 
 
 	/**
@@ -148,12 +175,30 @@ public class Order extends JFrame {
 	 */
 	public Order() {
 		beverageType = new JLabel();
-//		countPearl=0;
-//		countPudding=0;
-//		countGrassJelly=0;
-//		private int countPearl;
-//		private int countPudding;
-//		private int countGrassJelly;
+		
+		fileIngre = new FileRW("src/data/ingredient");
+		ins = fileIngre.readIngre();
+		mn.setIns(ins);
+		
+//		btnIngredient= new ArrayList<>();
+		btnIngredient.add(btnChocolate);
+		btnIngredient.add(btnMatcha);
+		btnIngredient.add(btnTaro);
+		btnIngredient.add(btnPearl);
+		btnIngredient.add(btnPudding);
+		btnIngredient.add(btnGrassjelly);
+		btnIngredient.add(btnBlack);
+		btnIngredient.add(btnMilk);
+		btnIngredient.add(btnRedbull);
+		btnIngredient.add(btnCocaCola);
+		btnIngredient.add(btn7Up);
+		btnIngredient.add(btnSting);
+		btnIngredient.add(btnOrange);
+		btnIngredient.add(btnLemonade);
+		
+		
+		
+		
 
 
 		setTitle("Order");
@@ -760,6 +805,8 @@ public class Order extends JFrame {
 				pressedFlavour(btnChocolate);
 			}
 		});
+		
+	
 		btnChocolate.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnChocolate.setPreferredSize(new Dimension(120, 40));
 		btnChocolate.setMinimumSize(new Dimension(120, 40));
@@ -1364,9 +1411,50 @@ public class Order extends JFrame {
 
 //		set background
 		setPanelBackground(pnOrder, new Color(255, 235, 205));
+		
+//		dat enbable nut ingredient
+		
+		enable(btnChocolate);
+		enable(btnMatcha);
+		enable(btnTaro);
+		enable(btnPearl);
+		enable(btnPudding);
+		enable(btnGrassjelly);
+		enable(btnBlack);
+		enable(btnMilk);
+		enable(btnRedbull);
+		enable(btnCocaCola);
+		enable(btn7Up);
+		enable(btnSting);
+		enable(btnOrange);
+		enable(btnLemonade);
+
+		
+
 	}
 
 //	*******************************************************
+
+	
+	public MilkTeaStore getMn() {
+		return mn;
+	}
+
+
+	public void setMn(MilkTeaStore mn) {
+		this.mn = mn;
+	}
+
+
+	public List<Ingredient> getIns() {
+		return ins;
+	}
+
+
+	public void setIns(List<Ingredient> ins) {
+		this.ins = ins;
+	}
+
 
 	//	ham dat mau nen
 	public static void setPanelBackground(JPanel panel, Color color) {
@@ -1522,7 +1610,7 @@ public void getCategory(JButton btn) {
 	}
 	
 	
-    private void enableEditing(boolean enable) {
+    public void enableEditing(boolean enable) {
         btnRemove.setEnabled(enable);
 //        tblProductInfo.setEnabled(enable);
         
@@ -1539,7 +1627,7 @@ public void getCategory(JButton btn) {
 //        model.setRowCount(model.getRowCount() - 1);  // Xóa hàng trống mới vừa thêm
 //        model.fireTableStructureChanged();  // Cập nhật lại cấu trúc bảng
     }
-    private void updateTable() {
+    public void updateTable() {
     	price=0;
 		quantityEach=0;
 		quantityTotal=0;
@@ -1556,13 +1644,13 @@ public void getCategory(JButton btn) {
 		lblRePrice.setText(totalPrice+"");
     }
     
-    private void changeBtnToppingsToDefault() {
+    public void changeBtnToppingsToDefault() {
     	btnPudding.setBackground(new Color(255, 204, 153));
     	btnPearl.setBackground(new Color(255, 204, 153));
     	btnGrassjelly.setBackground(new Color(255, 204, 153));
     }
     
-    private void resetCustom() {
+    public void resetCustom() {
     	countPudding=0;
     	countGrassJelly=0;
     	countPearl=0;
@@ -1580,7 +1668,18 @@ public void getCategory(JButton btn) {
     	
     }
     
+    public void enable(JButton btn) {
+    	String name="";
+    	for(Ingredient in : ins) {
+    		if(in.isStock()==false) {
+    			name = in.getName();
+    			if(btn.getText().equalsIgnoreCase(name))
+    				btn.setEnabled(false);
+    		}
+		
+    	}
+    }
 
     
-//    private void upProduct(double)
+
 }

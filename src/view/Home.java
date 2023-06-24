@@ -31,6 +31,8 @@ import javax.swing.border.LineBorder;
 
 import MilkTeaStore.Employee;
 import MilkTeaStore.FileRW;
+import MilkTeaStore.Ingredient;
+import MilkTeaStore.MilkTeaStore;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -59,6 +61,7 @@ public class Home extends JFrame {
 	private JLabel lblTitle;
 	private JButton btnBack;
 	private FileRW file;
+
 	/**
 	 * Launch the application.
 	 */
@@ -80,6 +83,7 @@ public class Home extends JFrame {
 	 */
 	public Home() {
 		file = new FileRW("src/data/employee");
+
 		
 		setTitle("Home");
 		
@@ -281,6 +285,22 @@ public class Home extends JFrame {
 		user = this.getTxtID().getText();
 		Management mn= new Management();
 		mn.getLblUser().setText(user);
+		
+		if(user.equals("root")) {
+			mn.getBtnAddIngr().setEnabled(true);
+			mn.getBtnAddEm().setEnabled(true);
+			mn.getBtnStop().setEnabled(true);
+			mn.getBtnUpGradeEm().setEnabled(true);
+			mn.getBtnAddCus().setEnabled(true);
+		}
+		else {
+			mn.getBtnAddIngr().setEnabled(false);
+			mn.getBtnAddEm().setEnabled(false);
+			mn.getBtnStop().setEnabled(false);
+			mn.getBtnUpGradeEm().setEnabled(false);
+			mn.getBtnAddCus().setEnabled(false);
+		}
+	
 		mn.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		mn.setVisible(true);
 	}

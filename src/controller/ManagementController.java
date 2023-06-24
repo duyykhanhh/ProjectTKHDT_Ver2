@@ -4,12 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import MilkTeaStore.Customer;
 import MilkTeaStore.Employee;
+import MilkTeaStore.Ingredient;
 import MilkTeaStore.Login;
 import MilkTeaStore.ManagementModel;
 import view.Management;
@@ -117,6 +119,8 @@ public class ManagementController implements ActionListener, MouseListener{
 			if(!name.equals("") && !unit.equals("") && !managementView.getTxtAmount().getText().equals("")) {
 			
 				managementView.getModelIngr().addRow(new Object[]{name, amount, unit, true});
+				Ingredient in = new Ingredient(name, amount, unit, true);
+				managementView.addIngre(in);
 				managementView.getTxtNameIngredient().setText(null);
 				managementView.getTxtAmount().setText(null);
 				managementView.getTxtUnit().setText(null);
@@ -139,6 +143,11 @@ public class ManagementController implements ActionListener, MouseListener{
 			else {
 				managementView.getTblIngr().setValueAt(false, selectedRow, 3);
 				managementView.getTblIngr().setValueAt(0, selectedRow, 1);
+				String name = (String) managementView.getTblIngr().getValueAt(selectedRow,0);
+				for(Ingredient ingre : managementView.getMn().getIns()) {
+					if(ingre.getName().equalsIgnoreCase(name))
+						managementView.outOfIn(ingre);
+				}
 			}		
 		}
 		
@@ -157,6 +166,11 @@ public class ManagementController implements ActionListener, MouseListener{
 					managementView.getTblIngr().setValueAt(managementView.getMaxCan(), selectedRow, 1);
 				if(managementView.getTblIngr().getValueAt(selectedRow, 2).equals("fruit"))
 					managementView.getTblIngr().setValueAt(managementView.getMaxFruit(), selectedRow, 1);
+				String name = (String) managementView.getTblIngr().getValueAt(selectedRow,0);
+				for(Ingredient ingre : managementView.getMn().getIns()) {
+					if(ingre.getName().equalsIgnoreCase(name))
+						managementView.fillIngre(ingre);
+				}
 				
 			}
 			
@@ -168,20 +182,26 @@ public class ManagementController implements ActionListener, MouseListener{
 			String name = managementView.getTxtNameEm().getText();	
 			char[] pw = managementView.getTxtPwEm().getPassword();
             String pwString = new String(pw);
-          
-            if(!id.equals("") && !name.equals("") && !pwString.equals("")) {
-            	managementView.getModelEm().addRow(new Object[]{id, name, 1, true});
-            	Employee em = new Employee(id, name, 1, true, pwString);
-            	managementView.addEm(em);
-            	
-    			managementView.getTxtIdEm().setText(null);
-    			managementView.getTxtNameEm().setText(null);
-    			managementView.getTxtPwEm().setText(null);
-            }
-            	
+            
+            if(managementView.checkExistedEm(id)==true)
+            	JOptionPane.showMessageDialog(null, "This account has aready existed."
+            			+ "\nChoose another, please.", "Message", JOptionPane.INFORMATION_MESSAGE);
             else {
-            	doNothing();
+                if(!id.equals("") && !name.equals("") && !pwString.equals("")) {
+                	managementView.getModelEm().addRow(new Object[]{id, name, 1, true});
+                	Employee em = new Employee(id, name, 1, true, pwString);
+                	managementView.addEm(em);
+                	
+        			managementView.getTxtIdEm().setText(null);
+        			managementView.getTxtNameEm().setText(null);
+        			managementView.getTxtPwEm().setText(null);
+                }
+                	
+                else {
+                	doNothing();
+                }
             }
+        
 			
 		}
 		
@@ -191,7 +211,28 @@ public class ManagementController implements ActionListener, MouseListener{
 			if(selectedRow<0)
 				doNothing();
 			else {
-				managementView.getTblEm().setValueAt(false, selectedRow, 3);
+				if((boolean) managementView.getTblEm().getValueAt(selectedRow, 3) == false) {
+					JOptionPane.showMessageDialog(null, "This employee has already quited.", "Message", JOptionPane.INFORMATION_MESSAGE);
+
+				}
+				else {
+					int result = JOptionPane.showConfirmDialog(null,
+		                    "Are you sure that this employee quited?\nThis cannot be undo.",
+		                    "Confirm",
+		                    JOptionPane.YES_NO_OPTION,
+		                    JOptionPane.QUESTION_MESSAGE);
+		            if(result == JOptionPane.YES_OPTION) {
+		            	managementView.getTblEm().setValueAt(false, selectedRow, 3);
+						String id = (String) managementView.getTblEm().getValueAt(selectedRow, 0);
+						for(Employee em : managementView.getMn().getEms()) {
+							if(em.getEmID().equalsIgnoreCase(id))
+								managementView.stopEm(em);
+						}
+		            }
+				}
+			
+	        
+			
 			}
 		}
 
@@ -203,12 +244,27 @@ public class ManagementController implements ActionListener, MouseListener{
 			if(selectedRow<0)
 				doNothing();
 			else {
-				int grade = (int) managementView.getTblEm().getValueAt(selectedRow, 2);
+				
+				String id = (String) managementView.getTblEm().getValueAt(selectedRow, 0);
+				for(Employee em : managementView.getMn().getEms()) {
+					if(em.getEmID().equalsIgnoreCase(id)) {
+						if(em.isWork()==false) {
+							JOptionPane.showMessageDialog(null, "This employee has already quited.", "Message", JOptionPane.INFORMATION_MESSAGE);
 
-				grade++;
-				if(grade >10)
-					grade=1;
-				managementView.getTblEm().setValueAt(grade, selectedRow, 2);
+						}
+						if(em.isWork()==true) {
+							int grade = (int) managementView.getTblEm().getValueAt(selectedRow, 2);
+							grade++;
+							if(grade >10)
+								grade=1;
+							managementView.getTblEm().setValueAt(grade, selectedRow, 2);
+							managementView.upgradeEm(em, grade);
+						}
+							
+					}
+				
+						
+				}
 			}
 	
 			
@@ -220,19 +276,27 @@ public class ManagementController implements ActionListener, MouseListener{
 			String id = managementView.getTxtCusId().getText();
 			char[] pw = managementView.getTxtCusPwd().getPassword();
             String pwString = new String(pw);
+            
+            if(managementView.checkExistedCus(id)==true)
+            	JOptionPane.showMessageDialog(null, "This account has aready existed."
+            			+ "\nChoose another, please.", "Message", JOptionPane.INFORMATION_MESSAGE);
+           
+			else {
+			    if(!id.equals("") && !pwString.equals("")) {
+	            	managementView.getModelCus().addRow(new Object[]{id,0});
+	            	Customer cus = new Customer(id, 0, pwString);
+	            	managementView.addCus(cus);
+	            	
+	    			managementView.getTxtCusId().setText(null);
+	    			managementView.getTxtCusPwd().setText(null);
+	            }
+	            	
+	            else {
+	            	doNothing();
+	            }
+			}
           
-            if(!id.equals("") && !pwString.equals("")) {
-            	managementView.getModelCus().addRow(new Object[]{id,0});
-            	Customer cus = new Customer(id, 0, pwString);
-            	managementView.addCus(cus);
-            	
-    			managementView.getTxtCusId().setText(null);
-    			managementView.getTxtCusPwd().setText(null);
-            }
-            	
-            else {
-            	doNothing();
-            }
+        
 			
 		}
 		
@@ -254,7 +318,7 @@ public class ManagementController implements ActionListener, MouseListener{
 	            	managementView.endDay();
 			}
 			else
-				JOptionPane.showMessageDialog(null, "You have already end day.", "Message", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "You have already ended day.", "Message", JOptionPane.INFORMATION_MESSAGE);
 				
             System.out.println(managementView.isNewDate());
 

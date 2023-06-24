@@ -67,6 +67,26 @@ public class FileRW {
 		}
 	}
 	
+	public void writeEmNew(Employee em) {
+		try {
+			FileWriter fw = new FileWriter(url);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(em.toString());
+			bw.newLine();
+			bw.close();
+			fw.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	public void reWriteEm(List<Employee> ems) {
+		writeEmNew(ems.get(0));
+		for(int i=1; i< ems.size();i++) {
+			writeEm(ems.get(i));
+		}
+	}
+	
 	public List<Employee> readEm() {
 		List<Employee> ems = new ArrayList<>();
 		try {
@@ -143,6 +163,20 @@ public class FileRW {
 	public void writeIngre(Ingredient in) {
 		try {
 			FileWriter fw = new FileWriter(url, true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(in.toString());
+			bw.newLine();
+			bw.close();
+			fw.close();
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	public void writeIngreNew(Ingredient in) {
+		try {
+			FileWriter fw = new FileWriter(url);
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(in.toString());
 			bw.newLine();
@@ -284,5 +318,5 @@ public class FileRW {
 		}
 		return totals;
 	}
-	
+
 }

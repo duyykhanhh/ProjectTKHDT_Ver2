@@ -1,16 +1,16 @@
-tea;40;L;true
-chocolate;4;kg;true
-matcha;4;kg;true
-taro;4;kg;true
-pearl;4;kg;true
-grassjelly;2;kg;true
-pudding;3;kg;true
-coffee;20;kg;true
-milk;10;can;true
-ice;40;kg;true
-redbull;20;can;true
-coca cola;20;can;true
-sting;20;can;true
-7Up;20;can;true
-orange;20;fruit;true
-lemonade;20;fruit;true
+milktea;40.0;L;true
+Chocolate;10.0;kg;true
+Matcha;10.0;kg;true
+taro;10.0;kg;true
+pearl;10.0;kg;true
+grassjelly;2.0;kg;true
+pudding;3.0;kg;true
+coffee;10.0;kg;true
+Milk;40.0;can;true
+ice;40.0;kg;true
+redbull;40.0;can;true
+coca cola;20.0;can;true
+sting;20.0;can;true
+7Up;40.0;can;true
+orange;20.0;fruit;true
+Lemonade;40.0;fruit;true

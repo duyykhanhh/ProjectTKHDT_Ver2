@@ -1,17 +1,21 @@
 package MilkTeaStore;
 
 public class Sting implements IFlavourStrategy{
+	double price;
+	public Sting() {
+	}
+
 
 	@Override
 	public String getFlavorDiscription() {
 		// TODO Auto-generated method stub
-		return "Sting";
+		return Flavor.getFlavorDescription(this);
 	}
 
 	@Override
 	public double getPrice() {
 		// TODO Auto-generated method stub
-		return 10;
+		return Flavor.getPrice(this);
 	}
 	
 

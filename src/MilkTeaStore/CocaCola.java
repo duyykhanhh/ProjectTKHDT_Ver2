@@ -1,17 +1,18 @@
 package MilkTeaStore;
 
 public class CocaCola implements IFlavourStrategy{
-
+	public CocaCola() {
+	}
 	@Override
 	public String getFlavorDiscription() {
 		// TODO Auto-generated method stub
-		return "Coca cola";
+		return Flavor.getFlavorDescription(this);
 	}
 
 	@Override
 	public double getPrice() {
 		// TODO Auto-generated method stub
-		return 10;
+		return Flavor.getPrice(this);
 	}
 	
 

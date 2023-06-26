@@ -27,6 +27,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import MilkTeaStore.Beverage;
+import MilkTeaStore.MilkTea;
 import MilkTeaStore.ChocolateFlavour;
 import MilkTeaStore.FileRW;
 import MilkTeaStore.Ingredient;
@@ -694,6 +695,7 @@ public class Order extends JFrame {
 
 //				if(!lblNumOfPearl.getText().equalsIgnoreCase("0")){
 				Topping topping;
+				if(beverage instanceof MilkTea){
 				if(countPearl!=0){
 //					Topping topping = factory.createTopping(btnPearl.getText(),Integer.parseInt(lblNumOfPearl.getText()));
 //					Topping topping = beverage.getToppingFactory().createTopping(btnPearl.getText(),Integer.parseInt(lblNumOfPearl.getText()));
@@ -721,7 +723,10 @@ public class Order extends JFrame {
 
 					toppingList.add(topping);
 				}
-				
+				}
+//				if(beverage instanceof Coffee){
+//
+//				}
 
 				double price=0;		
 				price= orderController.getTotalPrice(beverage,flavour,toppingList,size);

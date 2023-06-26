@@ -14,6 +14,11 @@ public abstract class Beverage {
 public Beverage() {
 
 }
+public Beverage(double price, IFlavourStrategy flavour){
+	super();
+	this.price = price;
+	this.flavour = flavour;
+}
 	public Beverage(double price,IFlavourStrategy flavour, ISizeStrategy size) {
 		super();
         this.price = price;
@@ -35,19 +40,32 @@ public abstract String getDescription();
 public String getFullDescription(){
 	StringBuilder sb = new StringBuilder();
 	sb.append(getDescription());
+	if(flavour!=null)
 	sb.append(flavour.getFlavorDiscription()+" ");
 	for(Topping topping: toppingList){
 		sb.append(" "+topping.getDiscription()+"x"+topping.getQuantity()+" ");
 
 	}
+	if(size!=null)
     sb.append(size.getSize());
 	return sb.toString();
 }
 
 	public double getTotalPrice() {
 		double toppingPrice = 0;
+		if(toppingList.size()!=0){
 		for(Topping topping : toppingList){
 			toppingPrice+=topping.getPrice();
+		}}
+		else {
+			toppingPrice =0;
+		}
+//		if(flavour == null){
+//
+//			return priceStrategy.getPrice(size.getPrice() * ( 1))+toppingPrice ;
+//		}
+		if(size == null){
+		 return	priceStrategy.getPrice(  ( flavour.getPrice())) ;
 		}
 		return priceStrategy.getPrice(size.getPrice() * ( flavour.getPrice()))+toppingPrice ;
 
@@ -141,6 +159,18 @@ public String getFullDescription(){
 			this.flavour= new OrangeFlavour();
 		else if(flavour.equals("Lemonade"))
 			this.flavour= new LemonadeFlavour();
+		else if(flavour.equals("Sting"))
+			this.flavour= new Sting();
+		else if(flavour.equals("Redbull"))
+			this.flavour= new RedBull();
+		else if(flavour.equals("CocaCola"))
+			this.flavour= new CocaCola();
+		else if(flavour.equals("7Up"))
+			this.flavour= new SevenUp();
+		else if(flavour.equals("Black"))
+			this.flavour= new BlackCoffeeFlavour();
+		else if(flavour.equals("Milk"))
+			this.flavour= new MilkCoffeeFlavour();
 	}
 
 

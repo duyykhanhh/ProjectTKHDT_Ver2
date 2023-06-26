@@ -3,6 +3,7 @@ package MilkTeaStore;
 public abstract class Topping {
 
     private int quantity;
+    private double price;
 
 
 //	public ToppingDecorator(ISizeStrategy size, IPriceStrategy pricePercentage, IFlavorStrategy flavor,
@@ -32,5 +33,9 @@ public abstract class Topping {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

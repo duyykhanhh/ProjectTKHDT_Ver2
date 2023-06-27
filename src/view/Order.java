@@ -730,10 +730,7 @@ public class Order extends JFrame {
 
 				double price=0;		
 				price= orderController.getTotalPrice(beverage,flavour,toppingList,size);
-			
-			
-				
-				
+		
 				model.addRow(new Object[]{beverage.getFullDescription(),price,1});
 				
 				if(beverage.getFullDescription().length()>40) {

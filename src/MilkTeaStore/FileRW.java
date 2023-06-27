@@ -34,15 +34,18 @@ public class FileRW {
 //		filetest.writeEm(em);
 //		Date date = new Date();
 //		Calendar time = Calendar.getInstance();
-		FileRW filetest1= new FileRW("src/RevenueToday");
-		RevenueToday today = new RevenueToday(10);
-		List<RevenueToday> todays = new ArrayList<>();
-		todays.add(today);
-		filetest1.writeRevenueToday(today);
-		todays = filetest1.readToday();
-		for(RevenueToday today1 : todays) {
-			System.out.println(today1);
-		}
+//		FileRW filetest1= new FileRW("src/RevenueToday");
+//		RevenueToday today = new RevenueToday(10);
+//		List<RevenueToday> todays = new ArrayList<>();
+//		todays.add(today);
+//		filetest1.writeRevenueToday(today);
+//		todays = filetest1.readToday();
+//		for(RevenueToday today1 : todays) {
+//			System.out.println(today1);
+//		}
+		
+		FileRW fileTestPrice = new FileRW("src/data/priceUnit");
+		System.out.println(fileTestPrice.readPriceUnit("pearl"));
 		
 	}
 
@@ -317,6 +320,30 @@ public class FileRW {
 			// TODO: handle exception
 		}
 		return totals;
+	}
+	public double readPriceUnit(String name) {
+		double money=0;
+		try {
+			FileReader fr = new FileReader(url);
+			BufferedReader br = new BufferedReader(fr);
+			String line ="";
+	
+			while(true) {
+				line= br.readLine();
+				String text[]= line.split("=");
+				if(text[0].equalsIgnoreCase(name)) {
+					money = Double.parseDouble(text[1]);
+					break;
+				}
+				if(line == null)
+					break;
+				
+				
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return money;
 	}
 
 }

@@ -3,6 +3,8 @@ package MilkTeaStore;
 import java.util.ArrayList;
 
 public class GrassJelly extends Topping {
+	private FileRW filePrice = new FileRW("scr/data/priceUnit");
+//	private double price = filePrice.readPriceUnit("grassjelly");
 	private double price=2000;
 	public GrassJelly() {
 

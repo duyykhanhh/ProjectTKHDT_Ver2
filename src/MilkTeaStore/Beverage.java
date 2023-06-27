@@ -3,14 +3,17 @@ package MilkTeaStore;
 import java.util.ArrayList;
 
 public abstract class Beverage {
+	private FileRW filePrice = new FileRW("scr/data/priceUnit");
+//	private static double priceUnit;
+//	private double price = filePrice.readPriceUnit("beverage");
 	private double price;
+
 	private IFlavourStrategy flavour;
 	private ISizeStrategy size;
 	private IPriceStrategy priceStrategy = new NormalPrice();
 	private ToppingFactory toppingFactory = new ToppingFactory();
 	private ArrayList<Topping> toppingList = new ArrayList<Topping>();
 
-//	private boolean isOwnCup;
 public Beverage() {
 
 }
@@ -24,18 +27,9 @@ public Beverage(double price, IFlavourStrategy flavour){
         this.price = price;
 		this.flavour = flavour;
 		this.size = size;
-//		this.size = new Small();
-//		this.flavour = new ChocolateFlavour();
 
-//		this.priceStrategy = new NormalPrice();
-
-
-//		this.isOwnCup = isOwnCup;
 	}
 
-//	public String getDescription() {
-//		return drink.getDiscription();
-//	}
 public abstract String getDescription();
 public String getFullDescription(){
 	StringBuilder sb = new StringBuilder();
@@ -84,8 +78,9 @@ public String getFullDescription(){
 	}
 
 	public double getPrice() {
-		return 5000;
+		return price;
 	}
+	
 
 	public void setPrice(double price) {
 		this.price = price;
@@ -125,26 +120,6 @@ public String getFullDescription(){
 	public void setPriceStrategy(IPriceStrategy priceStrategy) {
 		this.priceStrategy = priceStrategy;
 	}
-
-//	public boolean isOwnCup() {
-//		return isOwnCup;
-//	}
-//
-//	public void setOwnCup(boolean isOwnCup) {
-//		this.isOwnCup = isOwnCup;
-//	}
-
-	//	loai nuoc
-//	public void setDrink(String kind) {
-//		if(kind.equals("Milktea"))
-//			this.drink= new MilkTea();
-//		else if(kind.equals("Coffee"))
-//			this.drink= new Coffee();
-//		else if(kind.equals("Softdrink"))
-//			this.drink= new SoftDrink();
-//		else if(kind.equals("Juice"))
-//			this.drink= new Juice();
-//	}
 
 
 	//	huong vi
@@ -208,17 +183,6 @@ public String getFullDescription(){
 	}
 
 
-//	dat nuoc
-//	public Beverage orderBeverage(String kind, String flavour, String size) {
-//		Beverage beverage= new Beverage();
-//		beverage.setDrink(kind);
-//		beverage.setFlavour(flavour);
-//		beverage.setSize(size);
-//		return beverage;
-//	}
-	
-	
-//
 
 
 }

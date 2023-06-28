@@ -29,6 +29,8 @@ public class Home extends JFrame {
 			public void run() {
 				try {
 					Home frame = new Home();
+					frame.setSize(1224, 600);
+					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -89,7 +91,10 @@ public class Home extends JFrame {
 	
 	public void openOrder() {
 		Order order= new Order();
-		order.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		Pointer.setCurrentOrder(order);//lấy địa chỉ đối tượng hiện tại bằng hàm set (static)(vì mỗi order là mỗi bảng khascc nhau
+		order.setSize(1224, 600);
+		order.setLocationRelativeTo(null);
 		order.setVisible(true);
 	}
+
 }

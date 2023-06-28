@@ -20,6 +20,7 @@ import MilkTeaStore.Beverage;
 import MilkTeaStore.Topping;
 import MilkTeaStore.ToppingFactory;
 import controller.OrderController;
+import controller.PayController;
 
 import javax.swing.JLabel;
 import javax.swing.GroupLayout;
@@ -33,6 +34,7 @@ import java.awt.Insets;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.CardLayout;
@@ -53,6 +55,7 @@ public class Order extends JFrame {
 //	private Drink dr;
 //	private ISizeStrategy size;
 //private String  size, flavour, topping;
+
 	double totalPrice=0;
  String dr ;
  String size = "";
@@ -87,7 +90,86 @@ public class Order extends JFrame {
 	private JLabel lblNumOfPudding;
 	private JLabel lblNumOfGrassJelly;
 	Object[][] data;
+	public JLabel getLL(){
 
+		return this.lblNumOfPearl;
+	}
+	// hàm lấy biến model của bảng
+	public DefaultTableModel getModel() {
+
+		return this.model ;
+	}
+
+
+	//lấy số lượng món hàng
+	public int getCount() {
+		return this.count;
+	}
+
+	public  static Order currentOrder;
+
+	//lấy ra tham cheieus currentorder
+
+	public static  Order setCuOrder(Order o){
+
+		return  currentOrder = o;
+	}
+
+
+	public static Order setCurrentOrder(Order order) {
+		return Order.currentOrder = order;
+	}
+
+	/// lấy giá htiền sau khi chọn các món hàng
+	public double getprice() {
+
+		return this.totalPrice;
+	}
+
+
+
+	// gán giá trị giá cho biế : lưu ý là phải trên 0 đồng mới được gán
+	public void setTotalPrice(double price) {
+		if (price >= 0.0) {
+			this.totalPrice = price;
+		}
+	}
+
+	//////////////////////////////////////////////lấy dữ liệu từ bảng
+	public List<Object[]> getPaymentTableData() {
+		List<Object[]> tableData = new ArrayList<>();
+		DefaultTableModel tableModel = (DefaultTableModel) tblProductInfo.getModel();
+		int rowCount = tableModel.getRowCount();
+		for (int i = 0; i < rowCount; i++) {
+			Object[] rowData = new Object[3];
+			rowData[0] = tableModel.getValueAt(i, 0); // Lấy giá trị từ cột 0 (tên đồ uống)
+			rowData[1] = tableModel.getValueAt(i, 1); // Lấy giá trị từ cột 1 (số lượng)
+			rowData[2] = tableModel.getValueAt(i, 2); // Lấy giá trị từ cột 2 (giá trị khác)
+			tableData.add(rowData);
+		}
+		return tableData;
+	}
+
+	public int setCount(int _count){
+
+		if(this.count >= 0 )
+			this.count =_count;
+
+		return this.count;
+	}
+
+
+	public JLabel getLblRePrice(){
+
+		return this.lblRePrice;
+	}
+
+	public JLabel getLblReTotal(){
+
+		return this.lblReTotal;
+	}
+	///////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Launch the application.
@@ -216,6 +298,8 @@ public class Order extends JFrame {
 
 		btnPay = new JButton("PAY");
 		btnPay.addMouseListener(new MouseAdapter() {
+
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				btnPay.setBackground(new Color(255,153,51));
@@ -227,6 +311,25 @@ public class Order extends JFrame {
 				btnPay.setBackground(new Color(255, 204, 153));
 			}
 		});
+
+		///////////////////////////////////
+		btnPay.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//tạo object Pay và lấy dữ liệu từ table của Order khi Pay đưuọc nhấn
+				var orderData = Order.currentOrder.getPaymentTableData();
+				Pay pay = new Pay(orderData);
+				new PayController( pay);
+				Pay.currentPay = pay;
+				//lấy pay hiện tại theo order kia (để lấy bảng của nó, mối pay là 1 bảng khác nhau)
+				//sau khi dừng giao diện thì sẽ reset table về 0
+//          model.setRowCount(0); // chỗ này có thể sai khi chưa ấn thanh toán mới trở ra mà đã xóa rồi
+
+			}
+		});
+
+
+		////////////////////////////////////////////////////////////////////
 		GroupLayout gpnPay = new GroupLayout(pnPay);
 		gpnPay.setHorizontalGroup(
 				gpnPay.createParallelGroup(Alignment.LEADING)

@@ -10,9 +10,10 @@ public class ProductServiceImp implements  IProductService{
     public double getTotalPrice(Beverage beverage, String flavour, List<Topping> toppingList, String size) {
         beverage.setFlavour(flavour);
         beverage.setSize(size);
+        if(toppingList.size()!=0){
         for(Topping topping: toppingList){
             beverage.addTopping(topping);
-        }
+        }}
         return beverage.getTotalPrice();
     }
 
@@ -36,6 +37,10 @@ public class ProductServiceImp implements  IProductService{
         else if(name.equalsIgnoreCase("SoftDrink")){
             beverage = new SoftDrink();
             return beverage;
+
+        }
+        if(name.equalsIgnoreCase("Sting")){
+
 
         }
 //        else{

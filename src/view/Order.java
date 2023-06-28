@@ -1,5 +1,6 @@
 package view;
 
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -10,16 +11,31 @@ import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 import MilkTeaStore.Beverage;
+import MilkTeaStore.MilkTea;
+import MilkTeaStore.ChocolateFlavour;
+import MilkTeaStore.FileRW;
+import MilkTeaStore.Ingredient;
+import MilkTeaStore.MilkTeaStore;
 import MilkTeaStore.Topping;
 import MilkTeaStore.ToppingFactory;
 import controller.OrderController;
+import controller.PayController;
 
 import javax.swing.JLabel;
 import javax.swing.GroupLayout;
@@ -33,6 +49,7 @@ import java.awt.Insets;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.CardLayout;
@@ -44,6 +61,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 
 public class Order extends JFrame {
 	private OrderController orderController;
@@ -61,7 +80,9 @@ public class Order extends JFrame {
  JLabel beverageType;
 
 	private ArrayList<String> toppings;
-	private ArrayList<String> beverage;
+//	private ArrayList<String> beverage;
+	Beverage beverage;
+
 
 	//	dem thoi gian tro giup trong lam hieu ung button, khong duoc xoa
 	private javax.swing.Timer timer;
@@ -69,15 +90,28 @@ public class Order extends JFrame {
 
 
 	//	khai bao thanh phan giao dien
-	private JPanel pnOrder,pnProduct,pnPay,pnCustom,pnCustomOK;
+	
+	private JPanel pnOrder,pnProduct,pnPay,pnCustom,pnCustomOK, pnCoffeeFlavour;
 	private JTable tblProductInfo;
 	private JScrollPane sp;
 	private DefaultTableModel model;
 	private JLabel lblTotal, lblTotalPrice, lblReTotal, lblRePrice;
-	private JButton btnMilktea, btnCoffee, btnSoftDrink, btnJuice, btnPay;
-	private JPanel pnOrdering, pnCategory, pnMTCustom, pnFlavour, pnTopping, pnSize,pnCoffee, pnOK;
+	private JButton btnMilktea, btnCoffee, btnSoftDrink, btnJuice, btnRemove,btnPay;
+	private JPanel pnOrdering, pnCategory, pnMTCustom, pnFlavour, pnTopping, pnSize,pnCoffeeCustom, pnOK;
 	private JLabel lblCategory;
 	private JButton btnChocolate, btnMatcha, btnTaro, btnPearl,btnPudding, btnGrassjelly, btnS, btnM, btnL, btnOK;
+	private JButton btnBlack, btnMilk;
+	private JPanel pnCoffeeSize;
+	private JButton btnCoffeeS, btnCoffeeL, btnCoffeeM;
+	
+	private JPanel pnSoftdrinkFlavour, pnSoftdrinkCustom;
+	private JButton btnRedbull, btnCocaCola, btnSting, btn7Up;
+	
+	private JPanel pnJuiceCustom, pnJuiceFlavour, pnJuiceSize;
+	private JButton btnOrange, btnLemonade;
+	private JButton btnJuiceS, btnJuiceM, btnJuiceL;
+	
+	private List<JButton> btnIngredient = new ArrayList<>();
 
 	//	bien ho tro doi mau btn Topping
 	private int countPearl=0;
@@ -87,6 +121,126 @@ public class Order extends JFrame {
 	private JLabel lblNumOfPudding;
 	private JLabel lblNumOfGrassJelly;
 	Object[][] data;
+	
+//	bien ho tro tinh tien
+	int quantityEach, quantityTotal=0;
+	double price=0;
+	private JPanel pnProductAndEdit;
+	private JPanel pnEdit;
+	private JButton btnPlus, btnMinus;
+	private JPanel pnNull;
+	private JLabel lblNull;
+	
+	private FileRW fileIngre;
+	private MilkTeaStore mn = new MilkTeaStore();
+	private List<Ingredient> ins=new ArrayList<>();
+	
+//////////////////////////////////////////
+
+
+
+
+
+
+	//////////////////////////////////
+
+	public static  Order currentOrder;
+
+	//////
+
+	public int setCount(int _count){
+
+		if(this.count >= 0 )
+			this.count =_count;
+
+		return this.count;
+	}
+
+	////
+
+
+
+
+
+
+	public JLabel getLL(){
+
+		return this.lblNumOfPearl;
+	}
+	// hàm lấy biến model của bảng
+	public DefaultTableModel getModel() {
+
+		return this.model ;
+	}
+
+
+	//lấy số lượng món hàng
+	public int getCount() {
+		return this.count;
+	}
+
+	//lấy ra tham cheieus currentorder
+
+	public static  Order setCuOrder(Order o){
+
+		return  currentOrder = o;
+	}
+
+
+	public static Order setCurrentOrder(Order order) {
+		return Order.currentOrder = order;
+	}
+
+	/// lấy giá htiền sau khi chọn các món hàng
+	public double getprice() {
+
+		return this.totalPrice;
+	}
+
+
+
+	// gán giá trị giá cho biế : lưu ý là phải trên 0 đồng mới được gán
+	public void setTotalPrice(double price) {
+		if (price >= 0.0) {
+			this.totalPrice = price;
+		}
+	}
+
+	//////////////////////////////////////////////lấy dữ liệu từ bảng
+	public List<Object[]> getPaymentTableData() {
+		List<Object[]> tableData = new ArrayList<>();
+		DefaultTableModel tableModel = (DefaultTableModel) tblProductInfo.getModel();
+		int rowCount = tableModel.getRowCount();
+		for (int i = 0; i < rowCount; i++) {
+			Object[] rowData = new Object[3];
+			rowData[0] = tableModel.getValueAt(i, 0); // Lấy giá trị từ cột 0 (tên đồ uống)
+			rowData[1] = tableModel.getValueAt(i, 1); // Lấy giá trị từ cột 1 (số lượng)
+			rowData[2] = tableModel.getValueAt(i, 2); // Lấy giá trị từ cột 2 (giá trị khác)
+			tableData.add(rowData);
+		}
+		return tableData;
+	}
+
+	///////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+	public JLabel getLblRePrice(){
+
+		return this.lblRePrice;
+	}
+
+	public JLabel getLblReTotal(){
+
+		return this.lblReTotal;
+	}
+
+
+
+	///////////////////
 
 
 	/**
@@ -103,10 +257,24 @@ public class Order extends JFrame {
 				}
 			}
 		});
+		Order o = new Order();
+//		for(JButton btn : o.getBtnIngredient()) {
+//			System.out.println(btn.getText());
+//		}
 
 	}
 //	bang mau
 //	new Color(255, 204, 153) mau btnCategory mac dinh
+
+
+	public List<JButton> getBtnIngredient() {
+		return btnIngredient;
+	}
+
+
+	public void setBtnIngredient(List<JButton> btnIngredient) {
+		this.btnIngredient = btnIngredient;
+	}
 
 
 	/**
@@ -114,16 +282,34 @@ public class Order extends JFrame {
 	 */
 	public Order() {
 		beverageType = new JLabel();
-//		countPearl=0;
-//		countPudding=0;
-//		countGrassJelly=0;
-//		private int countPearl;
-//		private int countPudding;
-//		private int countGrassJelly;
+		
+		fileIngre = new FileRW("src/data/ingredient");
+		ins = fileIngre.readIngre();
+		mn.setIns(ins);
+		
+//		btnIngredient= new ArrayList<>();
+		btnIngredient.add(btnChocolate);
+		btnIngredient.add(btnMatcha);
+		btnIngredient.add(btnTaro);
+		btnIngredient.add(btnPearl);
+		btnIngredient.add(btnPudding);
+		btnIngredient.add(btnGrassjelly);
+		btnIngredient.add(btnBlack);
+		btnIngredient.add(btnMilk);
+		btnIngredient.add(btnRedbull);
+		btnIngredient.add(btnCocaCola);
+		btnIngredient.add(btn7Up);
+		btnIngredient.add(btnSting);
+		btnIngredient.add(btnOrange);
+		btnIngredient.add(btnLemonade);
+
+
 
 		setTitle("Order");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1224, 600);
+		setBounds(0, 0, 1284, 600);
+		setLocationRelativeTo(null);
+
 		pnOrder = new JPanel();
 		pnOrder.setBorder(new EmptyBorder(5, 5, 5, 5));
 		pnOrder.setLayout(new BorderLayout(0, 0));
@@ -143,61 +329,264 @@ public class Order extends JFrame {
 //		tao bang hien san pham da order, bang nay nam ben trai
 		pnProduct = new JPanel();
 		pnOrder.add(pnProduct, BorderLayout.EAST);
-		pnProduct.setMinimumSize(new Dimension(320, 600));
-		pnProduct.setMaximumSize(new Dimension(320, 600));
-		pnProduct.setPreferredSize(new Dimension(320, 600));
+		pnProduct.setMinimumSize(new Dimension(380, 600));
+		pnProduct.setMaximumSize(new Dimension(380, 600));
+		pnProduct.setPreferredSize(new Dimension(380, 600));
 		pnProduct.setLayout(new BoxLayout(pnProduct, BoxLayout.Y_AXIS));
 
-//		tblProductInfo = new JTable();
-//		tblProductInfo.setModel(new DefaultTableModel(
-//			new Object[][] {
-//				{"1.Tra sua chan chau",20000, 4},
-//			},
-//			new String[] {
-//				"Product", "Price Unit", "Quantity"
-//			}
-//		) {
-//			Class[] columnTypes = new Class[] {
-//				String.class, Double.class, Object.class
-//			};
-//			public Class getColumnClass(int columnIndex) {
-//				return columnTypes[columnIndex];
-//			}
-//		});
 
 		 data= new Object[][]{
 //				 {"1.Tra sua chan chau", 20000, 4}
+			 		
+		 };
+		 Class[] columnTypes = {
+				 String.class, Double.class, Integer.class
 		 };
 
 		String[] column= {
-				"Product", "Price Unit", "Quantity"
+				"Product", "Price Unit", "Qty"
 		};
 
 
 		model= new DefaultTableModel(data, column);
-
 		tblProductInfo= new JTable(model);
-//		tblProductInfo.setBackground(new Color(255, 235, 205));
+		tblProductInfo.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		tblProductInfo.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField()));
+		
+		TableColumnModel columnModel = tblProductInfo.getColumnModel();
+		 columnModel.getColumn(0).setPreferredWidth(220); 
+	     columnModel.getColumn(1).setPreferredWidth(60);  
+	     columnModel.getColumn(2).setPreferredWidth(40);  
+	    
+	      DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer() {
+	            @Override
+	            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+	                JTextArea textArea = new JTextArea();
+	                textArea.setText(value != null ? value.toString() : "");
+	                textArea.setLineWrap(true);
+	                textArea.setWrapStyleWord(true);
+	                textArea.setBackground(table.getBackground());
+	                textArea.setFont(table.getFont());
 
+	                return textArea;
+	            }
+	        };
+	        tblProductInfo.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+	     
+	     
+	     
+		 
+		 tblProductInfo.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				// TODO Auto-generated method stub
+				btnPlus.setEnabled(true);
+				btnMinus.setEnabled(true);
+				btnRemove.setEnabled(true);
+				
+			}
+		});
 
-		tblProductInfo.getColumnModel().getColumn(0).setResizable(false);
-		tblProductInfo.getColumnModel().getColumn(0).setPreferredWidth(200);
-		tblProductInfo.getColumnModel().getColumn(0).setMinWidth(200);
-		tblProductInfo.getColumnModel().getColumn(1).setResizable(false);
-		tblProductInfo.getColumnModel().getColumn(1).setPreferredWidth(60);
-		tblProductInfo.getColumnModel().getColumn(1).setMinWidth(60);
-		tblProductInfo.getColumnModel().getColumn(2).setPreferredWidth(60);
-		tblProductInfo.getColumnModel().getColumn(2).setMinWidth(60);
-		tblProductInfo.getColumnModel().getColumn(2).setResizable(false);
+		
+		 
+		tblProductInfo.getModel().addTableModelListener(new TableModelListener() {
 
-//		pnProduct.add(tblProductInfo);
-//		JScrollPane sp = new JScrollPane(jTable)
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				// TODO Auto-generated method stub
+				updateTable();
+			}
+			
+		});
+
 		sp= new JScrollPane(tblProductInfo);
 //		sp.setBackground(new Color(255, 235, 205));
-		sp.setMinimumSize(new Dimension(320, 450));
-		sp.setMaximumSize(new Dimension(320, 450));
-		sp.setPreferredSize(new Dimension(320, 450));
-		pnProduct.add(sp);
+		sp.setMinimumSize(new Dimension(320, 400));
+		sp.setMaximumSize(new Dimension(320, 400));
+		sp.setPreferredSize(new Dimension(320, 400));
+
+		
+		pnProductAndEdit = new JPanel();
+		pnProductAndEdit.setLayout(new BorderLayout(0, 0));
+		pnProductAndEdit.add(sp, BorderLayout.CENTER);
+		pnProduct.add(pnProductAndEdit);
+		
+		
+		pnEdit = new JPanel();
+		pnProductAndEdit.add(pnEdit, BorderLayout.EAST);
+		pnEdit.setLayout(new BoxLayout(pnEdit, BoxLayout.Y_AXIS));
+		
+		pnEdit.add(Box.createVerticalStrut(60));
+		
+		btnPlus = new JButton("+");
+		btnPlus.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				  int selectedRow = tblProductInfo.getSelectedRow();
+		            if (selectedRow != -1) {
+		            	int qty = (int) tblProductInfo.getValueAt(selectedRow, 2);
+		            	qty++;
+		            	tblProductInfo.setValueAt(qty, selectedRow, 2);
+//		                enableEditing(false);
+		            }
+			}
+		});
+		
+		btnPlus.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnPlus.setBackground(new Color(255,153,51));
+
+			}
+
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnPlus.setBackground(new Color(255, 204, 153));
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				timer= new javax.swing.Timer(490, new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						  int selectedRow = tblProductInfo.getSelectedRow();
+				            if (selectedRow != -1) {
+				            	int qty = (int) tblProductInfo.getValueAt(selectedRow, 2);
+				            	qty+=9;
+				            	tblProductInfo.setValueAt(qty, selectedRow, 2);
+				            }
+
+					}
+				});
+
+				timer.start();
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				timer.stop();
+			
+			}
+			
+			
+		});
+		btnPlus.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnPlus.setMinimumSize(new Dimension(49, 60));
+		btnPlus.setMaximumSize(new Dimension(49, 60));
+		btnPlus.setPreferredSize(new Dimension(49, 60));
+		pnEdit.add(btnPlus);
+		
+		pnEdit.add(Box.createVerticalStrut(30));
+		
+		btnMinus = new JButton("-");
+		btnMinus.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				  int selectedRow = tblProductInfo.getSelectedRow();
+		            if (selectedRow != -1) {
+		            	int qty = (int) tblProductInfo.getValueAt(selectedRow, 2);
+		            	qty--;
+		              	if(qty<=0) {
+		            		model.removeRow(selectedRow);
+		            	}
+		            	else
+		            		tblProductInfo.setValueAt(qty, selectedRow, 2);
+		            }
+			}
+		});
+		
+		btnMinus.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnMinus.setBackground(new Color(255,153,51));
+			}
+
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnMinus.setBackground(new Color(255, 204, 153));
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				timer= new javax.swing.Timer(490, new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						  int selectedRow = tblProductInfo.getSelectedRow();
+				            if (selectedRow != -1) {
+				            	int qty = (int) tblProductInfo.getValueAt(selectedRow, 2);
+				            	qty-=9;
+				            	if(qty<=0) {
+				            		model.removeRow(selectedRow);
+				            	}
+				            	else
+				            		tblProductInfo.setValueAt(qty, selectedRow, 2);
+				            }
+
+					}
+				});
+
+				timer.start();
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				timer.stop();
+			
+			}
+		});
+		btnMinus.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnMinus.setMinimumSize(new Dimension(49, 60));
+		btnMinus.setMaximumSize(new Dimension(49, 60));
+		btnMinus.setPreferredSize(new Dimension(49, 60));
+		pnEdit.add(btnMinus);
+
+
+		
+		pnEdit.add(Box.createVerticalStrut(30));
+		
+		btnRemove = new JButton("X");
+		btnRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				  int selectedRow = tblProductInfo.getSelectedRow();
+		            if (selectedRow != -1) {
+		            	model.removeRow(selectedRow);
+//		                enableEditing(false);
+		            }
+			}
+		});
+		
+		btnRemove.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnRemove.setBackground(new Color(255,153,51));
+			}
+
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnRemove.setBackground(new Color(255, 204, 153));
+			}
+		});
+		btnRemove.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnRemove.setMinimumSize(new Dimension(49, 60));
+		btnRemove.setMaximumSize(new Dimension(49, 60));
+		btnRemove.setPreferredSize(new Dimension(49, 60));
+		pnEdit.add(btnRemove);
+	
+//		btnRemove.addActionListener(e -> {
+//            int selectedRow = tblProductInfo.getSelectedRow();
+//            if (selectedRow != -1) {
+//                model.removeRow(selectedRow);
+//                enableEditing(false);
+//            }
+//        });
+
 
 		pnPay = new JPanel();
 		pnProduct.add(pnPay);
@@ -227,6 +616,24 @@ public class Order extends JFrame {
 				btnPay.setBackground(new Color(255, 204, 153));
 			}
 		});
+
+		// khi ấn Pay thì
+		btnPay.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//tạo object Pay và lấy dữ liệu từ table của Order khi Pay đưuọc nhấn
+				var orderData = Order.currentOrder.getPaymentTableData();
+				Pay pay = new Pay(orderData);
+				new PayController( pay);
+				Pay.currentPay = pay;
+				//lấy pay hiện tại theo order kia (để lấy bảng của nó, mối pay là 1 bảng khác nhau)
+				//sau khi dừng giao diện thì sẽ reset table về 0
+//          model.setRowCount(0); // chỗ này có thể sai khi chưa ấn thanh toán mới trở ra mà đã xóa rồi
+			}
+		});
+
+
+
 		GroupLayout gpnPay = new GroupLayout(pnPay);
 		gpnPay.setHorizontalGroup(
 				gpnPay.createParallelGroup(Alignment.LEADING)
@@ -375,11 +782,7 @@ public class Order extends JFrame {
 
 		pnOK = new JPanel();
 		pnOK.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//		Border bdOK= BorderFactory.createMatteBorder(0, 0, 0, 2, new Color(255,153,51));
-//		pnOK.setBorder(bdOK);
-//		pnCustomOK.setPreferredSize(new Dimension(440, 500));
-//		pnCustomOK.setMinimumSize(new Dimension(440, 500));
-//		pnCustomOK.setMaximumSize(new Dimension(440, 500));
+
 		pnCustomOK.add(pnOK, BorderLayout.SOUTH);
 
 
@@ -388,8 +791,7 @@ public class Order extends JFrame {
 		btnOK.setMinimumSize(new Dimension(100, 60));
 		btnOK.setMaximumSize(new Dimension(100, 60));
 		btnOK.setPreferredSize(new Dimension(100, 60));
-//		btnOK.setSize(100, 100);
-//		pnCustomOK.add(btnOK, BorderLayout.SOUTH);
+
 
 		btnOK.addMouseListener(new MouseAdapter() {
 			@Override
@@ -403,20 +805,18 @@ public class Order extends JFrame {
 				btnOK.setBackground(new Color(255, 204, 153));
 			}
 		});
-//		btnOK.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//			}
-//		});
+
 
 //		btnOK.addActionListener(lis);
 		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Beverage beverage = orderController.setBeverage(dr);
+				beverage = orderController.setBeverage(dr);
 				ArrayList<Topping> toppingList = new ArrayList<>();
 
 //				if(!lblNumOfPearl.getText().equalsIgnoreCase("0")){
 				Topping topping;
+				if(beverage instanceof MilkTea){
 				if(countPearl!=0){
 //					Topping topping = factory.createTopping(btnPearl.getText(),Integer.parseInt(lblNumOfPearl.getText()));
 //					Topping topping = beverage.getToppingFactory().createTopping(btnPearl.getText(),Integer.parseInt(lblNumOfPearl.getText()));
@@ -444,12 +844,23 @@ public class Order extends JFrame {
 
 					toppingList.add(topping);
 				}
+				}
+//				if(beverage instanceof Coffee){
+//
+//				}
 
-				double price = orderController.getTotalPrice(beverage,flavour,toppingList,size);
-				totalPrice += price;
-				lblRePrice.setText(String.valueOf(totalPrice));
-				model.addRow(new Object[]{beverage.getFullDescription(),price});
-				lblReTotal.setText(String.valueOf(model.getRowCount()));
+				double price=0;		
+				price= orderController.getTotalPrice(beverage,flavour,toppingList,size);
+		
+				model.addRow(new Object[]{beverage.getFullDescription(),price,1});
+				
+				if(beverage.getFullDescription().length()>40) {
+					int rowCurrent= tblProductInfo.getRowCount()-1;
+					tblProductInfo.setRowHeight(rowCurrent, 40);
+				}
+				resetCustom();
+				
+
 
 
 
@@ -477,13 +888,14 @@ public class Order extends JFrame {
 		pnCustomOK.add(pnCustom,BorderLayout.CENTER);
 
 
+//		CardLayout ca
 		pnCustom.setLayout(new CardLayout(0, 0));
 		pnMTCustom = new JPanel();
 		pnMTCustom.setPreferredSize(new Dimension(490, 400));
 		pnMTCustom.setMinimumSize(new Dimension(490, 400));
 		pnMTCustom.setMaximumSize(new Dimension(490, 400));
 
-		pnCustom.add(pnMTCustom, "milk tea");
+		pnCustom.add(pnMTCustom, "Milktea");
 		pnMTCustom.setLayout(new BoxLayout(pnMTCustom, BoxLayout.Y_AXIS));
 
 
@@ -516,6 +928,8 @@ public class Order extends JFrame {
 				pressedFlavour(btnChocolate);
 			}
 		});
+		
+	
 		btnChocolate.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnChocolate.setPreferredSize(new Dimension(120, 40));
 		btnChocolate.setMinimumSize(new Dimension(120, 40));
@@ -779,11 +1193,285 @@ public class Order extends JFrame {
 		btnL.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		pnSize.add(btnL);
 
-		pnCoffee = new JPanel();
-		pnCustom.add(pnCoffee, "coffee");
-		pnCoffee.setLayout(new BoxLayout(pnCoffee, BoxLayout.Y_AXIS));
+		
+		
+//		********************************************************
+//		custom coffee
+		pnCoffeeCustom = new JPanel();
+		pnCustom.add(pnCoffeeCustom, "Coffee");
+		pnCoffeeCustom.setLayout(new BoxLayout(pnCoffeeCustom, BoxLayout.Y_AXIS));
+		
+		pnCoffeeFlavour = new JPanel();
+		pnCoffeeFlavour.setAlignmentX(Component.LEFT_ALIGNMENT);
+		pnCoffeeFlavour.setPreferredSize(new Dimension(670, 100));
+		pnCoffeeFlavour.setMinimumSize(new Dimension(670, 100));
+		pnCoffeeFlavour.setMaximumSize(new Dimension(670, 100));
 
-		btnMilktea.setBackground(new Color(255, 153, 51));
+//		Border bdCoffeeFlavour = BorderFactory.createMatteBorder(0,0, 2, 0, new Color(255, 153, 51));
+//		TitledBorder ttBdFlavour= BorderFactory.createTitledBorder(bdFlavour, "Flavour", TitledBorder.LEFT, TitledBorder.ABOVE_TOP);
+		ttBdFlavour.setTitleFont((new Font("Tahoma", Font.PLAIN, 14)));
+		ttBdFlavour.setTitleColor(Color.gray);
+		ttBdFlavour.setTitleJustification(TitledBorder.LEFT);
+		pnCoffeeFlavour.setBorder(ttBdFlavour);
+
+		pnCoffeeCustom.add(pnCoffeeFlavour);
+		pnCoffeeFlavour.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+
+		btnBlack = new JButton("Black");
+		btnBlack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedFlavour(btnBlack);
+			}
+		});
+		btnBlack.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnBlack.setPreferredSize(new Dimension(120, 40));
+		btnBlack.setMinimumSize(new Dimension(120, 40));
+		btnBlack.setMaximumSize(new Dimension(120, 40));
+		pnCoffeeFlavour.add(btnBlack);
+
+		btnMilk = new JButton("Milk");
+		btnMilk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedFlavour(btnMilk);
+			}
+		});
+		btnMilk.setPreferredSize(new Dimension(120, 40));
+		btnMilk.setMinimumSize(new Dimension(120, 40));
+		btnMilk.setMaximumSize(new Dimension(120, 40));
+		btnMilk.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		pnCoffeeFlavour.add(btnMilk);
+
+
+		pnMTCustom.add(Box.createVerticalStrut(20));
+
+
+
+		pnCoffeeSize = new JPanel();
+		pnCoffeeSize.setPreferredSize(new Dimension(670, 100));
+		pnCoffeeSize.setMinimumSize(new Dimension(670, 100));
+		pnCoffeeSize.setMaximumSize(new Dimension(670, 100));
+		pnCoffeeSize.setAlignmentX(0.0f);
+		pnCoffeeCustom.add(pnCoffeeSize);
+		pnCoffeeSize.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+
+//		Border bdSize = BorderFactory.createMatteBorder(0,0, 2, 0, new Color(255, 153, 51));
+//		TitledBorder ttBdSize= BorderFactory.createTitledBorder(bdSize, "Size", TitledBorder.LEFT, TitledBorder.ABOVE_TOP);
+//		ttBdSize.setTitleFont((new Font("Tahoma", Font.PLAIN, 14)));
+//		ttBdSize.setTitleColor(Color.gray);
+//		ttBdSize.setTitleJustification(TitledBorder.LEFT);
+		pnCoffeeSize.setBorder(ttBdSize);
+//
+		btnCoffeeS = new JButton("S");
+		btnCoffeeS.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedSize(btnCoffeeS);
+			}
+		});
+		btnCoffeeS.setPreferredSize(new Dimension(120, 40));
+		btnCoffeeS.setMinimumSize(new Dimension(120, 40));
+		btnCoffeeS.setMaximumSize(new Dimension(120, 40));
+		btnCoffeeS.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		pnCoffeeSize.add(btnCoffeeS);
+
+		btnCoffeeM = new JButton("M");
+		btnCoffeeM.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedSize(btnCoffeeM);
+			}
+		});
+		btnCoffeeM.setPreferredSize(new Dimension(120, 40));
+		btnCoffeeM.setMinimumSize(new Dimension(120, 40));
+		btnCoffeeM.setMaximumSize(new Dimension(120, 40));
+		btnCoffeeM.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		pnCoffeeSize.add(btnCoffeeM);
+
+		btnCoffeeL = new JButton("L");
+		btnCoffeeL.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedSize(btnCoffeeL);
+			}
+		});
+		btnCoffeeL.setPreferredSize(new Dimension(120, 40));
+		btnCoffeeL.setMinimumSize(new Dimension(120, 40));
+		btnCoffeeL.setMaximumSize(new Dimension(120, 40));
+		btnCoffeeL.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		pnCoffeeSize.add(btnCoffeeL);
+		
+//		********************************************************
+//		custom softdrink
+		pnSoftdrinkCustom = new JPanel();
+		pnCustom.add(pnSoftdrinkCustom, "Softdrink");
+		pnSoftdrinkCustom.setLayout(new BoxLayout(pnSoftdrinkCustom, BoxLayout.Y_AXIS));
+		
+		pnSoftdrinkFlavour = new JPanel();
+		pnSoftdrinkFlavour.setAlignmentX(Component.LEFT_ALIGNMENT);
+		pnSoftdrinkFlavour.setPreferredSize(new Dimension(670, 100));
+		pnSoftdrinkFlavour.setMinimumSize(new Dimension(670, 100));
+		pnSoftdrinkFlavour.setMaximumSize(new Dimension(670, 100));
+
+//		Border bdCoffeeFlavour = BorderFactory.createMatteBorder(0,0, 2, 0, new Color(255, 153, 51));
+//		TitledBorder ttBdFlavour= BorderFactory.createTitledBorder(bdFlavour, "Flavour", TitledBorder.LEFT, TitledBorder.ABOVE_TOP);
+		ttBdFlavour.setTitleFont((new Font("Tahoma", Font.PLAIN, 14)));
+		ttBdFlavour.setTitleColor(Color.gray);
+		ttBdFlavour.setTitleJustification(TitledBorder.LEFT);
+		pnSoftdrinkFlavour.setBorder(ttBdFlavour);
+
+		pnSoftdrinkCustom.add(pnSoftdrinkFlavour);
+		pnSoftdrinkFlavour.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+
+		btnRedbull = new JButton("Redbull");
+		btnRedbull.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedFlavour(btnRedbull);
+			}
+		});
+		btnRedbull.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnRedbull.setPreferredSize(new Dimension(120, 40));
+		btnRedbull.setMinimumSize(new Dimension(120, 40));
+		btnRedbull.setMaximumSize(new Dimension(120, 40));
+		pnSoftdrinkFlavour.add(btnRedbull);
+
+		btnCocaCola = new JButton("CocaCola");
+		btnCocaCola.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedFlavour(btnCocaCola);
+			}
+		});
+		btnCocaCola.setPreferredSize(new Dimension(120, 40));
+		btnCocaCola.setMinimumSize(new Dimension(120, 40));
+		btnCocaCola.setMaximumSize(new Dimension(120, 40));
+		btnCocaCola.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		pnSoftdrinkFlavour.add(btnCocaCola);
+		
+		btnSting = new JButton("Sting");
+		btnSting.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedFlavour(btnSting);
+			}
+		});
+		btnSting.setPreferredSize(new Dimension(120, 40));
+		btnSting.setMinimumSize(new Dimension(120, 40));
+		btnSting.setMaximumSize(new Dimension(120, 40));
+		btnSting.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		pnSoftdrinkFlavour.add(btnSting);
+		
+		btn7Up = new JButton("7Up");
+		btn7Up.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedFlavour(btn7Up);
+			}
+		});
+		btn7Up.setPreferredSize(new Dimension(120, 40));
+		btn7Up.setMinimumSize(new Dimension(120, 40));
+		btn7Up.setMaximumSize(new Dimension(120, 40));
+		btn7Up.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		pnSoftdrinkFlavour.add(btn7Up);
+		
+//		********************************************************
+//		custom juice
+		pnJuiceCustom = new JPanel();
+		pnCustom.add(pnJuiceCustom, "Juice");
+		pnJuiceCustom.setLayout(new BoxLayout(pnJuiceCustom, BoxLayout.Y_AXIS));
+		
+		pnJuiceFlavour = new JPanel();
+		pnJuiceFlavour.setAlignmentX(Component.LEFT_ALIGNMENT);
+		pnJuiceFlavour.setPreferredSize(new Dimension(670, 100));
+		pnJuiceFlavour.setMinimumSize(new Dimension(670, 100));
+		pnJuiceFlavour.setMaximumSize(new Dimension(670, 100));
+
+//		Border bdCoffeeFlavour = BorderFactory.createMatteBorder(0,0, 2, 0, new Color(255, 153, 51));
+//		TitledBorder ttBdFlavour= BorderFactory.createTitledBorder(bdFlavour, "Flavour", TitledBorder.LEFT, TitledBorder.ABOVE_TOP);
+		ttBdFlavour.setTitleFont((new Font("Tahoma", Font.PLAIN, 14)));
+		ttBdFlavour.setTitleColor(Color.gray);
+		ttBdFlavour.setTitleJustification(TitledBorder.LEFT);
+		pnJuiceFlavour.setBorder(ttBdFlavour);
+
+		pnJuiceCustom.add(pnJuiceFlavour);
+		pnJuiceFlavour.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+
+		btnOrange = new JButton("Orange");
+		btnOrange.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedFlavour(btnOrange);
+			}
+		});
+		btnOrange.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnOrange.setPreferredSize(new Dimension(120, 40));
+		btnOrange.setMinimumSize(new Dimension(120, 40));
+		btnOrange.setMaximumSize(new Dimension(120, 40));
+		pnJuiceFlavour.add(btnOrange);
+
+		btnLemonade = new JButton("Lemonade");
+		btnLemonade.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedFlavour(btnLemonade);
+			}
+		});
+		btnLemonade.setPreferredSize(new Dimension(120, 40));
+		btnLemonade.setMinimumSize(new Dimension(120, 40));
+		btnLemonade.setMaximumSize(new Dimension(120, 40));
+		btnLemonade.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		pnJuiceFlavour.add(btnLemonade);
+
+
+		pnJuiceCustom.add(Box.createVerticalStrut(20));
+
+
+
+		pnJuiceSize = new JPanel();
+		pnJuiceSize.setPreferredSize(new Dimension(670, 100));
+		pnJuiceSize.setMinimumSize(new Dimension(670, 100));
+		pnJuiceSize.setMaximumSize(new Dimension(670, 100));
+		pnJuiceSize.setAlignmentX(0.0f);
+		pnJuiceCustom.add(pnJuiceSize);
+		pnJuiceSize.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+
+//		Border bdSize = BorderFactory.createMatteBorder(0,0, 2, 0, new Color(255, 153, 51));
+//		TitledBorder ttBdSize= BorderFactory.createTitledBorder(bdSize, "Size", TitledBorder.LEFT, TitledBorder.ABOVE_TOP);
+//		ttBdSize.setTitleFont((new Font("Tahoma", Font.PLAIN, 14)));
+//		ttBdSize.setTitleColor(Color.gray);
+//		ttBdSize.setTitleJustification(TitledBorder.LEFT);
+		pnJuiceSize.setBorder(ttBdSize);
+//
+		btnJuiceS = new JButton("S");
+		btnJuiceS.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedSize(btnJuiceS);
+			}
+		});
+		btnJuiceS.setPreferredSize(new Dimension(120, 40));
+		btnJuiceS.setMinimumSize(new Dimension(120, 40));
+		btnJuiceS.setMaximumSize(new Dimension(120, 40));
+		btnJuiceS.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		pnJuiceSize.add(btnJuiceS);
+
+		btnJuiceM = new JButton("M");
+		btnJuiceM.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedSize(btnJuiceM);
+			}
+		});
+		btnJuiceM.setPreferredSize(new Dimension(120, 40));
+		btnJuiceM.setMinimumSize(new Dimension(120, 40));
+		btnJuiceM.setMaximumSize(new Dimension(120, 40));
+		btnJuiceM.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		pnJuiceSize.add(btnJuiceM);
+
+		btnJuiceL = new JButton("L");
+		btnJuiceL.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pressedSize(btnJuiceL);
+			}
+		});
+		btnJuiceL.setPreferredSize(new Dimension(120, 40));
+		btnJuiceL.setMinimumSize(new Dimension(120, 40));
+		btnJuiceL.setMaximumSize(new Dimension(120, 40));
+		btnJuiceL.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		pnJuiceSize.add(btnJuiceL);
+
+
+
+		btnMilktea.setBackground(new Color(255, 204, 153));
 		btnCoffee.setBackground(new Color(255, 204, 153));
 		btnSoftDrink.setBackground(new Color(255, 204, 153));
 		btnJuice.setBackground(new Color(255, 204, 153));
@@ -792,10 +1480,21 @@ public class Order extends JFrame {
 		btnChocolate.setBackground(new Color(255, 204, 153));
 		btnMatcha.setBackground(new Color(255, 204, 153));
 		btnTaro.setBackground(new Color(255, 204, 153));
+		
+		btnBlack.setBackground(new Color(255, 204, 153));
+		btnMilk.setBackground(new Color(255, 204, 153));
+		
+		btnRedbull.setBackground(new Color(255, 204, 153));
+		btnCocaCola.setBackground(new Color(255, 204, 153));
+		btnSting.setBackground(new Color(255, 204, 153));
+		btn7Up.setBackground(new Color(255, 204, 153));
+		
+		btnOrange.setBackground(new Color(255, 204, 153));
+		btnLemonade.setBackground(new Color(255, 204, 153));
 
-		btnChocolate.setBackground(new Color(255, 204, 153));
-		btnMatcha.setBackground(new Color(255, 204, 153));
-		btnTaro.setBackground(new Color(255, 204, 153));
+//		btnChocolate.setBackground(new Color(255, 204, 153));
+//		btnMatcha.setBackground(new Color(255, 204, 153));
+//		btnTaro.setBackground(new Color(255, 204, 153));
 
 		btnPearl.setBackground(new Color(255, 204, 153));
 		btnPudding.setBackground(new Color(255, 204, 153));
@@ -812,16 +1511,73 @@ public class Order extends JFrame {
 		btnS.setBackground(new Color(255, 204, 153));
 		btnM.setBackground(new Color(255, 204, 153));
 		btnL.setBackground(new Color(255, 204, 153));
+		
+		btnCoffeeS.setBackground(new Color(255, 204, 153));
+		btnCoffeeM.setBackground(new Color(255, 204, 153));
+		btnCoffeeL.setBackground(new Color(255, 204, 153));
+		
+		btnJuiceS.setBackground(new Color(255, 204, 153));
+		btnJuiceM.setBackground(new Color(255, 204, 153));
+		btnJuiceL.setBackground(new Color(255, 204, 153));
+
+		
 
 		btnOK.setBackground(new Color(255, 204, 153));
+		
+		btnPlus.setBackground(new Color(255, 204, 153));
+		btnMinus.setBackground(new Color(255, 204, 153));
+		btnRemove.setBackground(new Color(255, 204, 153));
 
 		btnPay.setBackground(new Color(255, 204, 153));
+		
+	
 
 //		set background
 		setPanelBackground(pnOrder, new Color(255, 235, 205));
+		
+//		dat enbable nut ingredient
+		
+		enable(btnChocolate);
+		enable(btnMatcha);
+		enable(btnTaro);
+		enable(btnPearl);
+		enable(btnPudding);
+		enable(btnGrassjelly);
+		enable(btnBlack);
+		enable(btnMilk);
+		enable(btnRedbull);
+		enable(btnCocaCola);
+		enable(btn7Up);
+		enable(btnSting);
+		enable(btnOrange);
+		enable(btnLemonade);
+
+		
+
 	}
 
 //	*******************************************************
+
+	
+	public MilkTeaStore getMn() {
+		return mn;
+	}
+
+
+	public void setMn(MilkTeaStore mn) {
+		this.mn = mn;
+	}
+
+
+	public List<Ingredient> getIns() {
+		return ins;
+	}
+
+
+	public void setIns(List<Ingredient> ins) {
+		this.ins = ins;
+	}
+
 
 	//	ham dat mau nen
 	public static void setPanelBackground(JPanel panel, Color color) {
@@ -843,6 +1599,7 @@ public class Order extends JFrame {
 		btnCoffee.setBackground(new Color(255, 204, 153));
 		btnSoftDrink.setBackground(new Color(255, 204, 153));
 		btnJuice.setBackground(new Color(255, 204, 153));
+
 	}
 
 	private void changeBtnCategoriesColor(JButton button) {
@@ -853,24 +1610,18 @@ public class Order extends JFrame {
 //	 xu ly du lieu
 public void getCategory(JButton btn) {
 	dr = btn.getText();
-//	beverageType.setText(btn.getText());
-//	if(btn == btnMilktea){
-//		dr = "Milktea";
-//	}
-//	else if(btn == btnCoffee){
-//		dr ="Coffee";
-//	}
-//	else if(btn == btnSoftDrink){
-//		dr ="SoftDrink";
-//	}
-//	else if(btn == btnJuice){
-//		dr = "Juice";
-//	}
+
 }
 
 	public void pressedCategory(JButton btn) {
+		resetCustom();
 		changeBtnCategoriesColor(btn);
+		
+		
 		getCategory(btn);
+		CardLayout cardLayout = (CardLayout) pnCustom.getLayout();
+		String str= btn.getText();
+		cardLayout.show(pnCustom, str);
 	}
 
 //	ham xu ly btnFlavour
@@ -880,6 +1631,19 @@ public void getCategory(JButton btn) {
 		btnChocolate.setBackground(new Color(255, 204, 153));
 		btnMatcha.setBackground(new Color(255, 204, 153));
 		btnTaro.setBackground(new Color(255, 204, 153));
+		
+		btnBlack.setBackground(new Color(255, 204, 153));
+		btnMilk.setBackground(new Color(255, 204, 153));
+		
+		btnRedbull.setBackground(new Color(255, 204, 153));
+		btnCocaCola.setBackground(new Color(255, 204, 153));		
+		btnSting.setBackground(new Color(255, 204, 153));
+		btn7Up.setBackground(new Color(255, 204, 153));
+		
+		btnOrange.setBackground(new Color(255, 204, 153));
+		btnLemonade.setBackground(new Color(255, 204, 153));
+		
+		
 
 	}
 
@@ -944,6 +1708,13 @@ public void getCategory(JButton btn) {
 		btnM.setBackground(new Color(255, 204, 153));
 		btnL.setBackground(new Color(255, 204, 153));
 
+		btnCoffeeS.setBackground(new Color(255, 204, 153));
+		btnCoffeeM.setBackground(new Color(255, 204, 153));
+		btnCoffeeL.setBackground(new Color(255, 204, 153));
+		
+		btnJuiceS.setBackground(new Color(255, 204, 153));
+		btnJuiceM.setBackground(new Color(255, 204, 153));
+		btnJuiceL.setBackground(new Color(255, 204, 153));
 	}
 
 	private void changeBtnSizeColor(JButton button) {
@@ -960,6 +1731,78 @@ public void getCategory(JButton btn) {
 		changeBtnSizeColor(btn);
 		getSize(btn);
 	}
+	
+	
+    public void enableEditing(boolean enable) {
+        btnRemove.setEnabled(enable);
+//        tblProductInfo.setEnabled(enable);
+        
+//        tblProductInfo.setedi(enable);
+//        tblProductInfo.getTableHeader().setReorderingAllowed(enable);
+//        tblProductInfo.getTableHeader().setResizingAllowed(enable);
+//        tblProductInfo.getColumnModel().setColumnSelectionAllowed(enable);
+//        tblProductInfo.getColumnModel().getColumn(0).setResizable(enable);
+//        tblProductInfo.getColumnModel().getColumn(1).setResizable(enable);
+//        tblProductInfo.getColumnModel().getColumn(2).setResizable(enable);
+        
+//        model.setRowCount(0);  // Xóa tất cả các hàng trước khi cập nhật chế độ chỉnh sửa
+//        model.addRow(new Object[] {"", ""});  // Thêm một hàng trống mới
+//        model.setRowCount(model.getRowCount() - 1);  // Xóa hàng trống mới vừa thêm
+//        model.fireTableStructureChanged();  // Cập nhật lại cấu trúc bảng
+    }
+    public void updateTable() {
+    	price=0;
+		quantityEach=0;
+		quantityTotal=0;
+		totalPrice=0;
+		for(int i=0; i<tblProductInfo.getRowCount();i++) {
+			price= (double) tblProductInfo.getValueAt(i, 1);
+			quantityEach= (int) tblProductInfo.getValueAt(i, 2);
+			price= price*quantityEach;
+			quantityTotal+=quantityEach;
+			totalPrice+= price;
+			
+		}
+		lblReTotal.setText(quantityTotal+"");
+		lblRePrice.setText(totalPrice+"");
+    }
+    
+    public void changeBtnToppingsToDefault() {
+    	btnPudding.setBackground(new Color(255, 204, 153));
+    	btnPearl.setBackground(new Color(255, 204, 153));
+    	btnGrassjelly.setBackground(new Color(255, 204, 153));
+    }
+    
+    public void resetCustom() {
+    	countPudding=0;
+    	countGrassJelly=0;
+    	countPearl=0;
+    	lblNumOfGrassJelly.setText(0+"");
+    	lblNumOfPearl.setText(0+"");
+    	lblNumOfPudding.setText(0+"");
+    	
+    	changeBtnFlavoursColorToDefault();
+    	changeBtnToppingsToDefault();
+    	changeBtnSizesColorToDefault();
+    	
+    }
+    
+    private void doNothing() {
+    	
+    }
+    
+    public void enable(JButton btn) {
+    	String name="";
+    	for(Ingredient in : ins) {
+    		if(in.isStock()==false) {
+    			name = in.getName();
+    			if(btn.getText().equalsIgnoreCase(name))
+    				btn.setEnabled(false);
+    		}
+		
+    	}
+    }
 
+    
 
 }

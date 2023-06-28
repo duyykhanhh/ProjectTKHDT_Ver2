@@ -3,50 +3,63 @@ package MilkTeaStore;
 import java.util.ArrayList;
 
 public abstract class Beverage {
+	private FileRW filePrice = new FileRW("scr/data/priceUnit");
+//	private static double priceUnit;
+//	private double price = filePrice.readPriceUnit("beverage");
 	private double price;
+
 	private IFlavourStrategy flavour;
 	private ISizeStrategy size;
 	private IPriceStrategy priceStrategy = new NormalPrice();
 	private ToppingFactory toppingFactory = new ToppingFactory();
 	private ArrayList<Topping> toppingList = new ArrayList<Topping>();
 
-//	private boolean isOwnCup;
 public Beverage() {
 
+}
+public Beverage(double price, IFlavourStrategy flavour){
+	super();
+	this.price = price;
+	this.flavour = flavour;
 }
 	public Beverage(double price,IFlavourStrategy flavour, ISizeStrategy size) {
 		super();
         this.price = price;
 		this.flavour = flavour;
 		this.size = size;
-//		this.size = new Small();
-//		this.flavour = new ChocolateFlavour();
 
-//		this.priceStrategy = new NormalPrice();
-
-
-//		this.isOwnCup = isOwnCup;
 	}
 
-//	public String getDescription() {
-//		return drink.getDiscription();
-//	}
 public abstract String getDescription();
 public String getFullDescription(){
 	StringBuilder sb = new StringBuilder();
 	sb.append(getDescription());
+	if(flavour!=null)
 	sb.append(flavour.getFlavorDiscription()+" ");
 	for(Topping topping: toppingList){
 		sb.append(" "+topping.getDiscription()+"x"+topping.getQuantity()+" ");
+
 	}
+	if(size!=null)
     sb.append(size.getSize());
 	return sb.toString();
 }
 
 	public double getTotalPrice() {
 		double toppingPrice = 0;
+		if(toppingList.size()!=0){
 		for(Topping topping : toppingList){
 			toppingPrice+=topping.getPrice();
+		}}
+		else {
+			toppingPrice =0;
+		}
+//		if(flavour == null){
+//
+//			return priceStrategy.getPrice(size.getPrice() * ( 1))+toppingPrice ;
+//		}
+		if(size == null){
+		 return	priceStrategy.getPrice(  ( flavour.getPrice())) ;
 		}
 		return priceStrategy.getPrice(size.getPrice() * ( flavour.getPrice()))+toppingPrice ;
 
@@ -65,8 +78,9 @@ public String getFullDescription(){
 	}
 
 	public double getPrice() {
-		return 5000;
+		return price;
 	}
+	
 
 	public void setPrice(double price) {
 		this.price = price;
@@ -107,26 +121,6 @@ public String getFullDescription(){
 		this.priceStrategy = priceStrategy;
 	}
 
-//	public boolean isOwnCup() {
-//		return isOwnCup;
-//	}
-//
-//	public void setOwnCup(boolean isOwnCup) {
-//		this.isOwnCup = isOwnCup;
-//	}
-
-	//	loai nuoc
-//	public void setDrink(String kind) {
-//		if(kind.equals("Milktea"))
-//			this.drink= new MilkTea();
-//		else if(kind.equals("Coffee"))
-//			this.drink= new Coffee();
-//		else if(kind.equals("Softdrink"))
-//			this.drink= new SoftDrink();
-//		else if(kind.equals("Juice"))
-//			this.drink= new Juice();
-//	}
-
 
 	//	huong vi
 	public void setFlavour(String flavour) {
@@ -140,6 +134,18 @@ public String getFullDescription(){
 			this.flavour= new OrangeFlavour();
 		else if(flavour.equals("Lemonade"))
 			this.flavour= new LemonadeFlavour();
+		else if(flavour.equals("Sting"))
+			this.flavour= new Sting();
+		else if(flavour.equals("Redbull"))
+			this.flavour= new RedBull();
+		else if(flavour.equals("CocaCola"))
+			this.flavour= new CocaCola();
+		else if(flavour.equals("7Up"))
+			this.flavour= new SevenUp();
+		else if(flavour.equals("Black"))
+			this.flavour= new BlackCoffeeFlavour();
+		else if(flavour.equals("Milk"))
+			this.flavour= new MilkCoffeeFlavour();
 	}
 
 
@@ -177,15 +183,6 @@ public String getFullDescription(){
 	}
 
 
-//	dat nuoc
-//	public Beverage orderBeverage(String kind, String flavour, String size) {
-//		Beverage beverage= new Beverage();
-//		beverage.setDrink(kind);
-//		beverage.setFlavour(flavour);
-//		beverage.setSize(size);
-//		return beverage;
-//	}
-//
 
 
 }

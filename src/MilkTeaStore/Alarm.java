@@ -24,4 +24,11 @@ public class Alarm {
 	public void ring() {
 		System.out.println("ring ring ring ring...");
 	}
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		return super.equals(obj);
+	}
+	
+	
 }

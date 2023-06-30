@@ -6,9 +6,13 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -21,7 +25,10 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -51,6 +58,10 @@ public class Bartender extends JFrame implements Observer{
 	List<OrderModel> orderList= new ArrayList<>();
     private FileRW fileAlarm;
 	private List<Alarm> as = new ArrayList<>();
+	private javax.swing.Timer timer;
+	
+	
+
 
 
 	/**
@@ -61,7 +72,8 @@ public class Bartender extends JFrame implements Observer{
 			public void run() {
 				try {
 					OrderData orderData = new OrderData();
-					Bartender frame = new Bartender(orderData);
+					Bartender frame = new Bartender();
+//					Bartender frame = new Bartender(orderData);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -73,11 +85,11 @@ public class Bartender extends JFrame implements Observer{
 	/**
 	 * Create the frame.
 	 */
-	public Bartender(OrderData orderData) {
+//	public Bartender(OrderData orderData)
+	public Bartender() {
 		fileAlarm = new FileRW("src/data/alarm");
 		as = this.fileAlarm.readAlarms();
-		this.orderData = orderData;
-		orderData.registerObserver(this);
+		PayView.registerObserver(this);
 
 		setTitle("Bartender");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,7 +107,8 @@ public class Bartender extends JFrame implements Observer{
 		pnMain.add(pnInfo);
 		
 		data = new Object[][] {
-			
+//			{"123456789012345678901234567890123456789012345678901234567890" , 1},
+//			{"to minh nhat" , 2}
 		};
 		
 		Class[] columnTypes = {
@@ -108,9 +121,9 @@ public class Bartender extends JFrame implements Observer{
 		
 		model= new DefaultTableModel(data, column);
 		
-//		this.writeOrderToTable(orderList);
 		tblOrderInfo =new JTable(model);
-		tblOrderInfo.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		tblOrderInfo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		tblOrderInfo.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		tblOrderInfo.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField()));
 		
 		TableColumnModel columnModel = tblOrderInfo.getColumnModel();
@@ -118,6 +131,7 @@ public class Bartender extends JFrame implements Observer{
 	     columnModel.getColumn(1).setPreferredWidth(100); 
 		
 	     DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer() {
+	    	 
 	            @Override
 	            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 	                JTextArea textArea = new JTextArea();
@@ -131,7 +145,44 @@ public class Bartender extends JFrame implements Observer{
 	            }
 	        };
 	        
+	        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+	        tblOrderInfo.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);    	        
 	        tblOrderInfo.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+	        
+	        tblOrderInfo.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+				
+				@Override
+				public void valueChanged(ListSelectionEvent e) {
+//					timer = new javax.swing.Timer(490, new ActionListener() {
+//						@Override
+//						public void actionPerformed(ActionEvent e) {
+//							// TODO Auto-generated method stub
+//							alarming();
+//
+//						}
+//					});
+//					timer.start();
+					btnAlarm.setEnabled(true);
+					btnFinished.setEnabled(true);
+				
+			
+					
+				}
+			});
+	        
+	   
+	        
+	        
+//	        tblOrderInfo.getSelectionModel().addListSelectionListener(e -> {
+//	            
+//	            selectedRow = tblOrderInfo.getSelectedRow();
+//	            if (selectedRow != -1) {
+//	              
+//	            	tblOrderInfo.setSelectionBackground(Color.WHITE);
+//	            	tblOrderInfo.setSelectionForeground(Color.BLACK);
+//	            }
+//	        });
 	        
 	    	sp = new JScrollPane(tblOrderInfo);
 			sp.setMinimumSize(new Dimension(500, 500));
@@ -169,20 +220,39 @@ public class Bartender extends JFrame implements Observer{
 			MouseListener mlis = new BartenderController(this);
 		    btnAlarm.addMouseListener(mlis);
 		    btnFinished.addMouseListener(mlis);
+		    
+		    ActionListener ac = new BartenderController(this);
+		    btnAlarm.addActionListener(ac);
+		    btnFinished.addActionListener(ac);
 			
 			setPanelBackground(pnMain, new Color(240, 255, 255));
 			
-			OrderModel o1 = new OrderModel("nhat", new Alarm(1, false));
-			OrderModel o2 = new OrderModel("to minh nhat", new Alarm(2, false));
-			orderList.add(o1);
-			orderList.add(o2);
-			writeOrderToTable(orderList);
+//			OrderModel o1 = new OrderModel("nhat", new Alarm(1, false));
+//			OrderModel o2 = new OrderModel("to minh nhat", new Alarm(2, false));
+//			
+//			addNewToOrderList(o2);
+//			addNewToOrderList(o1);
+//			writeOrderToTable(orderList);
+			
+//			Temp t1 = new Temp("mot mot", 1);
+//			Temp t2 =  new Temp("hai hai", 2);
+//			temps.add(t1);
+//			temps.add(t2);
+//			writeOrderToTableTtest(temps);
 			
 			
 		
 	}
 
 	
+	public JTable getTblOrderInfo() {
+		return tblOrderInfo;
+	}
+
+	public void setTblOrderInfo(JTable tblOrderInfo) {
+		this.tblOrderInfo = tblOrderInfo;
+	}
+
 	public void hoverIn(JButton btn) {
 		btn.setBackground(new Color(0, 139, 139));
 		btn.setForeground(new Color(255, 255, 240));
@@ -225,31 +295,95 @@ public class Bartender extends JFrame implements Observer{
 	}
 	
 	public void writeOrderToTable(List<OrderModel> orderList) {
-
+		int currentRow=0;
 		for(OrderModel o : orderList) {
+			
 			String drinks = o.getOrder();
 			int alarmNum = o.getAlarm().getNumber();
+//			int temp = drinks.length()/53 + 1;
+			int temp = countNewLines(drinks)+1;
+			
+			tblOrderInfo.setRowHeight(currentRow, 20 * temp);
 			this.model.addRow(new Object[] {drinks,alarmNum});
+			tblOrderInfo.setRowHeight(currentRow, 20 * temp);
+			currentRow++;
 		}
+	}
+
+	public void addNewToOrderList(OrderModel o) {
+		orderList.add(o);
 	}
 
 	@Override
 	public void update(OrderModel o) {
 		// TODO Auto-generated method stub
-//		String drinks = o.getOrder();
-//		int alarmNum = o.getAlarm().getNumber();
-//		this.model.addRow(new Object[] {drinks,alarmNum});
-		
+//		OrderModel temp = o;
 		orderList.add(o);
+//		addNewToOrderList(o);
+		this.model.setRowCount(0);
 		writeOrderToTable(orderList);
-        getContentPane().removeAll();
-        this.revalidate();
-        this.repaint();
+//		System.out.println(orderList);
+
 		
 		
 		
 	
 	}
+	
+	   public int countNewLines(String str) {
+		   String str1 = str;
+	        int count = 0;
+	        for (int i = 0; i < str1.length(); i++) {
+	            if (str1.charAt(i) == '\n') {
+	                count++;
+	            }
+	        }
+	        return count;
+	    }
+	   
+	   public void alarming() {
+		   
+		   int selectedRow = tblOrderInfo.getSelectedRow();
+		   int num = (int) this.model.getValueAt(selectedRow, 1);
+		   String str = num + ":alarming...";
+		   this.model.setValueAt(str, selectedRow, 1);
+		   for(Alarm a : as) {
+			   if(a.getNumber() == num)
+				   a.ring();
+			 
+		   }
+
+		   
+		   
+	   }
+	
+	  
+	  
+	public void finishOrder() {
+		int selectedRow = tblOrderInfo.getSelectedRow();
+		String str = (String) this.model.getValueAt(selectedRow, 1);
+		String[] info= str.split(":");
+		int num = Integer.parseInt(info[0]);
+		List<Alarm> alarms = fileAlarm.readAlarms();
+		for(Alarm a : alarms) {
+			if(a.getNumber() == num)
+				a.setAvailable(true);
+		}
+		
+		fileAlarm.reWriteAlarm(alarms);
+		
+
+		model.removeRow(selectedRow);
+		tblOrderInfo.repaint();
+		
+	
+	}
+
+
+	
+	
+
+	
 
 	
 	

@@ -34,6 +34,7 @@ import MilkTeaStore.BartenderModel;
 import MilkTeaStore.FileRW;
 import MilkTeaStore.IPayStrategy;
 import MilkTeaStore.Ingredient;
+import MilkTeaStore.Observer;
 import MilkTeaStore.OrderData;
 import MilkTeaStore.OrderModel;
 import MilkTeaStore.RevenueToday;
@@ -71,10 +72,12 @@ public class PayView extends JFrame {
     private List<JButton> alarmBtns = new ArrayList<>();
     
     private String drinks="";
+    private int rowOfDrink;
     private int alarmNum=0;
     
 
-	private OrderData orderData;
+	private static OrderData orderData;
+	private static List<Observer> obs= new ArrayList<>();
 
     
 
@@ -83,6 +86,7 @@ public class PayView extends JFrame {
 
 	public PayView() {
 		orderData = new OrderData();
+//		obs = orderData.getObs();
     	this.fileAlarm = new FileRW("src/data/alarm");
 		as = this.fileAlarm.readAlarms();
 		
@@ -540,6 +544,7 @@ public class PayView extends JFrame {
 	
 	public void backToOrder() {
 		Order o = new Order();
+		o.getModel().setRowCount(0);
 		o.getLblRePrice().setText(0.0 + "VND");
 		o.getLblReTotal().setText(0+"");
 	}
@@ -564,8 +569,8 @@ public class PayView extends JFrame {
 
 	public static void main(String[] args) {
 		PayView pay = new PayView();
-		pay.enableAlarmDevice(2);
-		System.out.println(pay.getAs());
+//		pay.enableAlarmDevice(2);
+//		System.out.println(pay.getAs());
 	}
 	
 
@@ -735,28 +740,30 @@ public class PayView extends JFrame {
 		return drinks;
 	}
 
-	public void setDrinks() {
-//		for (int row = 0; row < this.model.getRowCount(); row++) {
-//			Object[] rowData = new Object[this.model.getColumnCount()];
-//			this.drinks = this.drinks + (String) rowData[0] + 
-//					" | | Qty: " + (String) rowData[2] + "\n";
-//        }
-//		System.out.println(drinks);
-		
+	public void setDrinks() {		
 		int rowCount = drinksTable.getRowCount();
 		String drink="";
 		Integer qty;
 
         for (int row = 0; row < rowCount; row++) {
         	 drink = (String) drinksTable.getValueAt(row, 0);
+        	 
         	 qty =	(Integer) drinksTable.getValueAt(row, 2);
-        	 drinks = drinks + drink + " || " + qty +"\n";
+        	 if(drink.length() >= 64) {
+        		 String dr1 = drink.substring(0, 64);
+        		 String dr2 = drink.substring(64);
+        		 drinks = drinks + dr1 + "\n" + dr2 + " || " + qty + "\n";
+        	 }
+        	 else
+        		 drinks = drinks + drink + " || " + qty +"\n";
        
         }
-        System.out.println(drinks);
+
 		
 	}
 	
+
+
 	public Alarm newAlarm(int num) {
 		for(Alarm a : as) {
 			if(a.getNumber() == num) {
@@ -782,12 +789,36 @@ public class PayView extends JFrame {
 	public void moveOrderToObserver() {
 		int num = Integer.parseInt(lblAlarmInfo.getText());
 		OrderModel orderModel = new OrderModel(drinks, newAlarm(num));
-		orderData.setOrder(orderModel);
-		System.out.println(newAlarm(alarmNum));
-		System.out.println(as);
+		setOrder(orderModel);
+//		System.out.println(orderModel);
+//		System.out.println(orderData.getOrder());
+//		System.out.println(obs);
+
 		
 	}
 	
+	public void notifyToObserver() {
+		for(Observer ob : obs) {
+			ob.update(orderData.getOrder());
+		}
+	}
+	
+	
+	public void setOrder(OrderModel ordelModel) {
+		PayView.orderData.setOrder(ordelModel);
+		notifyToObserver();
+	}
+	
+	public static void registerObserver(Observer o) {
+		PayView.obs.add(o);
+		PayView.orderData.registerObserver(o);
+	}
+	
+	public static void removeObserver(Observer o) {
+//		PayView.orderData.getObs().remove(o);
+		PayView.obs.remove(o);
+		PayView.orderData.removeObserver(o);
+	}
 	public void unableAlarm(int num) {
 		
 	}
@@ -799,18 +830,18 @@ public class PayView extends JFrame {
 		double money = Double.parseDouble(str);
 		RevenueToday today = new RevenueToday(money);
 		fileToday.writeRevenueToday(today);
-		System.out.println(money);
-		System.out.println(str);
+//		System.out.println(money);
+//		System.out.println(str);
 		
 		
 	}
 	
-    public OrderData getOrderData() {
-		return orderData;
+    public static OrderData getOrderData() {
+		return PayView.orderData;
 	}
 
-	public void setOrderData(OrderData orderData) {
-		this.orderData = orderData;
+	public static void setOrderData(OrderData orderData) {
+		PayView.orderData = orderData;
 	}
 
 	public int getAlarmNum() {

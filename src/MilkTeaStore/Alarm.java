@@ -22,7 +22,7 @@ public class Alarm {
 	}
 	
 	public void ring() {
-		System.out.println("ring ring ring ring...");
+		System.out.println(number + ": ring ring ring ring...");
 	}
 	@Override
 	public boolean equals(Object obj) {

@@ -57,7 +57,7 @@ public class PayController implements ActionListener{
             pay.getOnlinePayment().setEnabled(false);
 
 
-            pay.backToOrder();
+//            pay.backToOrder();
 
             
             pay.getCheckCodeButton().setEnabled(false);

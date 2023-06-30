@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderData {
-	private OrderModel order;
-	private List<Observer> obs;
+	private static OrderModel order;
+	private static List<Observer> obs;
     private FileRW fileAlarm;
     private List<Alarm> as=new ArrayList<>();
 	public OrderData() {
@@ -15,28 +15,32 @@ public class OrderData {
 		as = fileAlarm.readAlarms();
 	}
 	
-	public void registerObserver(Observer o) {
-		this.obs.add(o);
+	public static void registerObserver(Observer o) {
+		obs.add(o);
 	}
 	
-	public void removeObserver(Observer o) {
-		this.obs.remove(o);
+	public static void removeObserver(Observer o) {
+		obs.remove(o);
 	}
 	
 	public void notifyObs() {
-		for(Observer o : this.obs) {
+		for(Observer o : obs) {
 			o.update(order);
 		}
 	}
 
-	public OrderModel getOrder() {
+	public static OrderModel getOrder() {
 		return order;
 	}
 
 	public void setOrder(OrderModel order) {
 		this.order = order;
-		notifyObs();
+		orderChanged();
 		
+	}
+	
+	public void orderChanged() {
+		notifyObs();
 	}
 	
 	public void freeAlarm(Alarm a) {
@@ -61,6 +65,16 @@ public class OrderData {
 		fileAlarm.reWriteAlarm(as);
 	}
 	
+	
+	
+	public static List<Observer> getObs() {
+		return obs;
+	}
+
+	public static void setObs(List<Observer> obs) {
+		OrderData.obs = obs;
+	}
+
 	public static void main(String[] args) {
 		OrderData data = new OrderData();
 //		AlarmManagement am = new AlarmManagement(data);

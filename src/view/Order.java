@@ -469,6 +469,26 @@ public class Order extends JFrame {
 			public void mouseExited(MouseEvent e) {
 				btnRemove.setBackground(new Color(255, 204, 153));
 			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				timer= new javax.swing.Timer(900, new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						model.setRowCount(0);
+
+					}
+				});
+
+				timer.start();
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				timer.stop();
+			
+			}
 		});
 		btnRemove.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnRemove.setMinimumSize(new Dimension(49, 60));
@@ -1735,7 +1755,18 @@ public void getCategory(JButton btn) {
 	public void setLblRePrice(JLabel lblRePrice) {
 		this.lblRePrice = lblRePrice;
 	}
+
+
+	public DefaultTableModel getModel() {
+		return model;
+	}
+
+
+	public void setModel(DefaultTableModel model) {
+		this.model = model;
+	}
     
+	
     
 
     

@@ -345,5 +345,71 @@ public class FileRW {
 		}
 		return money;
 	}
+	
+//	alarm
+	public void writeAlarm(Alarm a) {
+		try {
+			FileWriter fw = new FileWriter(url, true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(a.toString());
+			bw.newLine();
+			bw.close();
+			fw.close();
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	public void writeAlarmNew(Alarm a) {
+		try {
+			FileWriter fw = new FileWriter(url);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(a.toString());
+			bw.newLine();
+			bw.close();
+			fw.close();
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	public List<Alarm> readAlarms() {
+		List<Alarm> as = new ArrayList<>();
+		try {
+			FileReader fr = new FileReader(url);
+			BufferedReader br = new BufferedReader(fr);
+			String line="";
+			while(true) {
+				line = br.readLine();
+				if(line == null)
+					break;
+				String info[] = line.split(";");
+				int num = Integer.parseInt(info[0]);
+				boolean avai =true;
+				if(info[1].equals("true"))
+					avai = true;
+				if(info[1].equalsIgnoreCase("false"))
+					avai = false;
+				Alarm a = new Alarm(num, avai);
+				as.add(a);
+				
+				
+			}
+	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return as;
+	}
+	
+	public void reWriteAlarm(List<Alarm> as) {
+		writeAlarmNew(as.get(0));
+		for(int i=1; i<as.size(); i++) {
+			writeAlarm(as.get(i));
+		}
+	}
 
 }

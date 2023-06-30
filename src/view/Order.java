@@ -513,6 +513,21 @@ public class Order extends JFrame {
 				btnPay.setBackground(new Color(255, 204, 153));
 			}
 		});
+		
+		btnPay.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				goToPay();
+				
+
+
+
+
+			}
+		});
+
+		
+		
 		GroupLayout gpnPay = new GroupLayout(pnPay);
 		gpnPay.setHorizontalGroup(
 				gpnPay.createParallelGroup(Alignment.LEADING)
@@ -1681,6 +1696,47 @@ public void getCategory(JButton btn) {
 		
     	}
     }
+    
+    public void goToPay() {
+		
+		PayView pay = new PayView();
+		String totalPrice = lblRePrice.getText();
+		
+		for (int row = 0; row < this.model.getRowCount(); row++) {
+              Object[] rowData = new Object[this.model.getColumnCount()];
+              for (int col = 0; col < this.model.getColumnCount(); col++) {
+                  rowData[col] = this.model.getValueAt(row, col);
+              }
+              pay.getModel().addRow(rowData);
+          }
+		
+		pay.getTotalLabel().setText(totalPrice);
+		
+		
+	
+	}
+
+
+	public JLabel getLblReTotal() {
+		return lblReTotal;
+	}
+
+
+	public void setLblReTotal(JLabel lblReTotal) {
+		this.lblReTotal = lblReTotal;
+	}
+
+
+	public JLabel getLblRePrice() {
+		return lblRePrice;
+	}
+
+
+	public void setLblRePrice(JLabel lblRePrice) {
+		this.lblRePrice = lblRePrice;
+	}
+    
+    
 
     
 

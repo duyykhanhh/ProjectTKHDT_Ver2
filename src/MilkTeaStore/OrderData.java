@@ -6,9 +6,13 @@ import java.util.List;
 public class OrderData {
 	private OrderModel order;
 	private List<Observer> obs;
+    private FileRW fileAlarm;
+    private List<Alarm> as=new ArrayList<>();
 	public OrderData() {
 		super();
 		this.obs = new ArrayList<>();
+		fileAlarm= new FileRW("src/data/alarm");
+		as = fileAlarm.readAlarms();
 	}
 	
 	public void registerObserver(Observer o) {
@@ -30,17 +34,37 @@ public class OrderData {
 	}
 
 	public void setOrder(OrderModel order) {
-		if(order.getAlarm().getNumber() >=1 && order.getAlarm().getNumber()<=30) {
-			this.order = order;
-			notifyObs();
-		}
+		this.order = order;
+		notifyObs();
 		
+	}
+	
+	public void freeAlarm(Alarm a) {
+		for(Alarm al : as) {
+			if(al.getNumber() == a.getNumber()) {
+				al.setAvailable(true);
+				break;
+			}
+		}
+		notifyObs();
+		fileAlarm.reWriteAlarm(as);
+	}
+	
+	public void allocateAlarm(Alarm a) {
+		for(Alarm al : as) {
+			if(al.getNumber() == a.getNumber()) {
+				al.setAvailable(false);
+				break;
+			}
+		}
+		notifyObs();
+		fileAlarm.reWriteAlarm(as);
 	}
 	
 	public static void main(String[] args) {
 		OrderData data = new OrderData();
-		AlarmManagement am = new AlarmManagement(data);
-		Bartender ba = new Bartender(data);
+//		AlarmManagement am = new AlarmManagement(data);
+//		Bartender ba = new Bartender(data);
 		
 		String s1= "sting";
 		String s2= "coca";

@@ -1152,17 +1152,6 @@ public class Management extends JFrame {
 //	      dat mau nen
 	      setPanelBackground(pnManagement, new Color(240, 255, 255));
 	      btnIngr.setBackground(new Color(0, 139, 139));
-	      
-//	      changeBtnItemsToDefault();
-//	      btnRemoveIngr.setBackground(new Color(175, 238, 238));
-	      
-
-//	      btnAddEm.setBackground(new Color(175, 238, 238));
-//	      btnStop.setBackground(new Color(175, 238, 238));
-//	      btnChangePw.setBackground(new Color(175, 238, 238));
-//	      btnEditCus.setBackground(new Color(175, 238, 238));
-//	      btnRevenueTodayPrint.setBackground(new Color(175, 238, 238));
-//	      btnRevenueTotalPrint.setBackground(new Color(175, 238, 238));
 	     
 	      
 	      ActionListener ac = new ManagementController(this);

@@ -30,5 +30,9 @@ public class Alarm {
 		return super.equals(obj);
 	}
 	
+	public String toString() {
+		return number +";" + available;
+	}
+	
 	
 }

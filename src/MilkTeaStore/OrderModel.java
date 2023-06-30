@@ -4,17 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderModel {
-	private List<String> order = new ArrayList<>();
+	private String order;
 	private Alarm alarm;
-	public OrderModel(List<String> order, Alarm alarm) {
+	public OrderModel(String order, Alarm alarm) {
 		super();
 		this.order = order;
 		this.alarm = alarm;
 	}
-	public List<String> getOrder() {
+	
+	
+	public OrderModel(Alarm alarm) {
+		super();
+		this.alarm = alarm;
+	}
+
+
+	public String getOrder() {
 		return order;
 	}
-	public void setOrder(List<String> order) {
+	public void setOrder(String order) {
 		this.order = order;
 	}
 	public Alarm getAlarm() {
@@ -27,6 +35,10 @@ public class OrderModel {
 	public boolean equals(Object obj) {
 		// TODO Auto-generated method stub
 		return super.equals(obj);
+	}
+	
+	public String toString() {
+		return order + alarm;
 	}
 	
 	

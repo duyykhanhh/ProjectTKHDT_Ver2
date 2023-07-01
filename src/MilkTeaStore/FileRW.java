@@ -411,5 +411,72 @@ public class FileRW {
 			writeAlarm(as.get(i));
 		}
 	}
+	
+//	voucher
+	public List<Voucher> readVouchers() {
+		List<Voucher> vchs = new ArrayList<>();
+		try {
+			FileReader fr = new FileReader(url);
+			BufferedReader br = new BufferedReader(fr);
+			String line="";
+			while(true) {
+				line = br.readLine();
+				if(line == null)
+					break;
+				String info[] = line.split(";");
+				String str = (String) info[0];
+				boolean avai =true;
+				if(info[1].equals("true"))
+					avai = true;
+				if(info[1].equalsIgnoreCase("false"))
+					avai = false;
+				Voucher vch = new Voucher(str, avai);
+				vchs.add(vch);
+				
+				
+			}
+	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return vchs;
+	}
+	
+	public void writeVoucher(Voucher v) {
+		try {
+			FileWriter fw = new FileWriter(url, true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(v.toString());
+			bw.newLine();
+			bw.close();
+			fw.close();
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	public void writeVoucherNew(Voucher v) {
+		try {
+			FileWriter fw = new FileWriter(url);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(v.toString());
+			bw.newLine();
+			bw.close();
+			fw.close();
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	
+	public void reWriteVoucher(List<Voucher> vchs) {
+		writeVoucherNew(vchs.get(0));
+		for(int i=1; i<vchs.size(); i++) {
+			writeVoucher(vchs.get(i));
+		}
+	}
 
 }

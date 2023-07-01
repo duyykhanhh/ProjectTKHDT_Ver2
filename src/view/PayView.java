@@ -38,6 +38,7 @@ import MilkTeaStore.Observer;
 import MilkTeaStore.OrderData;
 import MilkTeaStore.OrderModel;
 import MilkTeaStore.RevenueToday;
+import MilkTeaStore.Voucher;
 import controller.BtnAlarmController;
 import controller.ManagementController;
 import controller.PayController;
@@ -48,7 +49,7 @@ public class PayView extends JFrame {
     private JLabel cashDiscountLabel, cardDiscountLabel, onlineDiscountLabel;
     private String resultRandom; 
     private JButton payButton, backButton;
-    private JLabel totalLabel, lblAlarmInfo;
+    private JLabel totalLabel, lblAlarmInfo, lblPreTotalPrice, lblPreAlarmInfo;
     private JTextField discountCodeField;
     private JButton checkCodeButton;
     private JTable drinksTable;
@@ -63,8 +64,9 @@ public class PayView extends JFrame {
     Object[][] data;
     
     JPanel centerPanel, center1;
+    JPanel pnPrice, pnAlarmNum;
     
-    private FileRW fileAlarm, fileToday;
+    private FileRW fileAlarm, fileToday, fileVoucher;
 	private List<Alarm> as = new ArrayList<>();
     private JButton createReamote;
     private JPanel panel;
@@ -74,6 +76,9 @@ public class PayView extends JFrame {
     private String drinks="";
     private int rowOfDrink;
     private int alarmNum=0;
+    
+    List<Voucher> vchs = new ArrayList<>();
+    
     
 
 	private static OrderData orderData;
@@ -91,6 +96,9 @@ public class PayView extends JFrame {
 		as = this.fileAlarm.readAlarms();
 		
 		this.fileToday = new FileRW("src/data/revenueToday");
+		
+		this.fileVoucher = new FileRW("src/data/voucher");
+		vchs = this.fileVoucher.readVouchers();
 
     	setTitle("Payment");
     	
@@ -146,7 +154,8 @@ public class PayView extends JFrame {
 	        payButton.setBackground(new Color(255, 153, 51));
 	        payButton.setPreferredSize(new Dimension(80, 30));
 
-	        totalLabel = new JLabel("Total:");
+	        totalLabel = new JLabel();
+	        lblPreTotalPrice = new JLabel("Total: ");
 
 
 	        payButton.addActionListener(new PayController(this));
@@ -177,25 +186,58 @@ public class PayView extends JFrame {
 	        topPanel.add(backButton, BorderLayout.WEST);
 	        getContentPane().add(topPanel, BorderLayout.NORTH);
 	        topPanel.setBackground(new Color(255, 235, 205));
-	        JPanel paymentPanel = new JPanel(new GridLayout(3, 1));
+	        JPanel paymentPanel = new JPanel(new GridLayout(6, 1));
+	        
+	        cashDiscountLabel = new JLabel();
+	        cardDiscountLabel = new JLabel();
+	        onlineDiscountLabel = new JLabel();
+	        
+
+	        cashDiscountLabel.setVisible(false);
+	        cardDiscountLabel.setVisible(false);
+	        onlineDiscountLabel.setVisible(false);
+	        
 	        paymentPanel.add(cashPayment);
+	        paymentPanel.add(cashDiscountLabel);
 	        paymentPanel.add(cardPayment);
+	        paymentPanel.add(cardDiscountLabel);
 	        paymentPanel.add(onlinePayment);
+	        paymentPanel.add(onlineDiscountLabel);
+
 	        cashPayment.setOpaque(false);
 	        cardPayment.setOpaque(false);
 	        onlinePayment.setOpaque(false);
 	        getContentPane().add(paymentPanel, BorderLayout.WEST);
 	        paymentPanel.setBackground(new Color(255, 235, 205));
+	        
+	        pnPrice = new JPanel();
+	        pnPrice.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+	        pnPrice.add(lblPreTotalPrice);
+	        pnPrice.add(totalLabel);
+	        
+	        
 //	        JPanel centerPanel = new JPanel(new BorderLayout());
 	        centerPanel = new JPanel();
 	        centerPanel.setLayout(new CardLayout(0, 0));
 	        center1 = new JPanel(new BorderLayout());
-	        center1.add(totalLabel, BorderLayout.NORTH);
+	        center1.add(pnPrice, BorderLayout.NORTH);
+//	        center1.add(totalLabel, BorderLayout.NORTH);
+	        
 	        center1.add(sp, BorderLayout.CENTER);
 	        centerPanel.add(center1, "Info");
 	        
-	        lblAlarmInfo = new JLabel("Alarm: ");
-	        center1.add(lblAlarmInfo, BorderLayout.SOUTH);
+	        pnAlarmNum = new JPanel();
+	        
+	        lblPreAlarmInfo = new JLabel("Alarm: ");
+	        lblAlarmInfo = new JLabel();
+	        pnAlarmNum.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+	        pnAlarmNum.add(lblPreAlarmInfo);
+	        pnAlarmNum.add(lblAlarmInfo);
+	        
+	     
+	
+	        
+	        center1.add(pnAlarmNum, BorderLayout.SOUTH);
 
 	        
 	        
@@ -283,7 +325,7 @@ public class PayView extends JFrame {
 
 	                    double money = Double.parseDouble(totalLabel.getText()) /2;
 	  
-	                    totalLabel.setText("Total: " + money);
+	                    totalLabel.setText(money+"");
 	                    checkCodeButton.setEnabled(false);
 	                    discountCodeField.setEnabled(false);
 
@@ -327,25 +369,18 @@ public class PayView extends JFrame {
 	            }
 	        });
 	        
-	        cashDiscountLabel = new JLabel();
-	        cardDiscountLabel = new JLabel();
-	        onlineDiscountLabel = new JLabel();
-	        
-
-	        cashDiscountLabel.setVisible(false);
-	        cardDiscountLabel.setVisible(false);
-	        onlineDiscountLabel.setVisible(false);
+	     
 	        
 	        cashPayment.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
 	                resultRandom = generateRandomCode();
-	                cashDiscountLabel.setText("Voucher: " + resultRandom);  
-	                cashDiscountLabel.setVisible(true); 
-
-	              
-	                cardDiscountLabel.setVisible(false);
-	                onlineDiscountLabel.setVisible(false);
+//	                cashDiscountLabel.setText("Voucher: " + resultRandom);  
+//	                cashDiscountLabel.setVisible(true); 
+//
+//	              
+//	                cardDiscountLabel.setVisible(false);
+//	                onlineDiscountLabel.setVisible(false);
 	            }
 	        });
 	        
@@ -354,12 +389,12 @@ public class PayView extends JFrame {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
 	                resultRandom = generateRandomCode();
-	                cardDiscountLabel.setText("Voucher: " + resultRandom);  
-	                cardDiscountLabel.setVisible(true);  
-
-	       
-	                cashDiscountLabel.setVisible(false);
-	                onlineDiscountLabel.setVisible(false);
+//	                cardDiscountLabel.setText("Voucher: " + resultRandom);  
+//	                cardDiscountLabel.setVisible(true);  
+//
+//	       
+//	                cashDiscountLabel.setVisible(false);
+//	                onlineDiscountLabel.setVisible(false);
 	            }
 	        });
 	        
@@ -367,12 +402,12 @@ public class PayView extends JFrame {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
 	                resultRandom = generateRandomCode();
-	                onlineDiscountLabel.setText("Voucher: " + resultRandom);  
-	                onlineDiscountLabel.setVisible(true);  
-
-	             
-	                cashDiscountLabel.setVisible(false);
-	                cardDiscountLabel.setVisible(false);
+//	                onlineDiscountLabel.setText("Voucher: " + resultRandom);  
+//	                onlineDiscountLabel.setVisible(true);  
+//
+//	             
+//	                cashDiscountLabel.setVisible(false);
+//	                cardDiscountLabel.setVisible(false);
 	            }
 	        });
 	        
@@ -417,8 +452,23 @@ public class PayView extends JFrame {
     }
     
     public boolean checkDiscountCode(String inputCode) {
-
-        return (inputCode.equals(resultRandom));
+    	
+//        return (inputCode.equals(resultRandom));
+    	boolean result = false;
+    	for(Voucher vch : vchs) {
+    		if(vch.getStr().equals(inputCode)) {
+    			if(vch.isAvailable()==true) {
+    				result=true;
+    				vch.setAvailable(false);
+    				this.fileVoucher.reWriteVoucher(vchs);
+    			}
+    			
+    			
+    		}
+    			
+    				
+    	}
+    	return result;
     }
 
 	public JTable getDrinksTable() {

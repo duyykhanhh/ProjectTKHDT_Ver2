@@ -1441,8 +1441,7 @@ public class Order extends JFrame {
 		btnJuiceS.setBackground(new Color(255, 204, 153));
 		btnJuiceM.setBackground(new Color(255, 204, 153));
 		btnJuiceL.setBackground(new Color(255, 204, 153));
-
-		
+	
 
 		btnOK.setBackground(new Color(255, 204, 153));
 		

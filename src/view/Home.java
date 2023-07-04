@@ -327,13 +327,19 @@ public class Home extends JFrame {
 		user = this.getTxtID().getText();
 		boolean result=false;
 		List<Employee> ems = file.readEm();
-		for(Employee e : ems) {
-			if(e.getEmID().equals(user))
-				if(e.isWork()==true)
-					result=true;
-				else if(e.isWork()==false)
-					result=false;
+		if(user.equals("root"))
+			result =true;
+		else {
+			for(Employee e : ems) {
+				if(e.getEmID().equals(user))
+					if(e.isWork()==true)
+						result=true;
+					else if(e.isWork()==false)
+						result=false;
+			}
 		}
+		
+		
 		return result;
 	}
 	

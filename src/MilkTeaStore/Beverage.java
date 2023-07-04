@@ -8,18 +8,19 @@ public abstract class Beverage {
 
 //	private static double priceUnit;
 //	private double price = filePrice.readPriceUnit("beverage");
-	
+
 	private String urlRoot=Home.getUrlRoot();
 	private String url = urlRoot + "/priceUnit";
-	
+
 	private FileRW filePrice = new FileRW(url);
 //	private FileRW filePrice;
-	private double price;
+private double price;
 
 	private IFlavourStrategy flavour;
 	private ISizeStrategy size;
 	private IPriceStrategy priceStrategy = new NormalPrice();
 	private ToppingFactory toppingFactory = new ToppingFactory();
+	private BeverageFactory beverageFactory = new BeverageFactory();
 	private ArrayList<Topping> toppingList = new ArrayList<Topping>();
 
 public Beverage() {
@@ -30,6 +31,7 @@ public Beverage(double price, IFlavourStrategy flavour){
 	this.price = price;
 	this.flavour = flavour;
 }
+
 	public Beverage(double price,IFlavourStrategy flavour, ISizeStrategy size) {
 		super();
         this.price = price;
@@ -43,7 +45,7 @@ public String getFullDescription(){
 	StringBuilder sb = new StringBuilder();
 	sb.append(getDescription());
 	if(flavour!=null)
-	sb.append(flavour.getFlavorDiscription()+" ");
+		sb.append(flavour.getFlavorDiscription()+" ");
 	for(Topping topping: toppingList){
 		sb.append(" "+topping.getDiscription()+"x"+topping.getQuantity()+" ");
 
@@ -56,10 +58,9 @@ public String getFullDescription(){
 	public double getTotalPrice() {
 		double toppingPrice = 0;
 		if(toppingList.size()!=0){
-		for(Topping topping : toppingList){
-			toppingPrice+=topping.getPrice();
-		}}
-		else {
+			for(Topping topping : toppingList){
+				toppingPrice+=topping.getPrice();
+			}} else {
 			toppingPrice =0;
 		}
 //		if(flavour == null){
@@ -67,15 +68,11 @@ public String getFullDescription(){
 //			return priceStrategy.getPrice(size.getPrice() * ( 1))+toppingPrice ;
 //		}
 		if(size == null){
-		 return	priceStrategy.getPrice(  ( flavour.getPrice())) ;
+			return priceStrategy.getPrice(  ( flavour.getPrice())) ;
 		}
 		return priceStrategy.getPrice(size.getPrice() * ( flavour.getPrice()))+toppingPrice ;
 
 //		return priceStrategy.getPrice(5000);
-
-
-
-
 
 
 	}
@@ -88,7 +85,7 @@ public String getFullDescription(){
 	public double getPrice() {
 		return price;
 	}
-	
+
 
 	public void setPrice(double price) {
 		this.price = price;
@@ -132,39 +129,13 @@ public String getFullDescription(){
 
 	//	huong vi
 	public void setFlavour(String flavour) {
-		if(flavour.equals("Chocolate"))
-			this.flavour= new ChocolateFlavour();
-		else if(flavour.equals("Matcha"))
-			this.flavour= new MatchaFlavour();
-		else if(flavour.equals("Taro"))
-			this.flavour= new TaroFlavour();
-		else if(flavour.equals("Orange"))
-			this.flavour= new OrangeFlavour();
-		else if(flavour.equals("Lemonade"))
-			this.flavour= new LemonadeFlavour();
-		else if(flavour.equals("Sting"))
-			this.flavour= new Sting();
-		else if(flavour.equals("Redbull"))
-			this.flavour= new RedBull();
-		else if(flavour.equals("CocaCola"))
-			this.flavour= new CocaCola();
-		else if(flavour.equals("7Up"))
-			this.flavour= new SevenUp();
-		else if(flavour.equals("Black"))
-			this.flavour= new BlackCoffeeFlavour();
-		else if(flavour.equals("Milk"))
-			this.flavour= new MilkCoffeeFlavour();
+		this.flavour = beverageFactory.createFlavour(flavour);
 	}
 
 
 	//	size
 	public void setSize(String size) {
-		if(size.equalsIgnoreCase("S"))
-			this.size= new Small();
-		else if(size.equalsIgnoreCase("M"))
-			this.size= new Medium();
-		else if(size.equalsIgnoreCase("L"))
-			this.size= new Large();
+		this.size = beverageFactory.createSize(size);
 	}
 
 	//	them topping
@@ -173,17 +144,13 @@ public String getFullDescription(){
 		toppingList.add(topping);
 	}
    public void addTopping(Topping topping){
-		toppingList.add(topping);
+	   toppingList.add(topping);
    }
-
-
-
 
 
 	public ToppingFactory getToppingFactory() {
 		return toppingFactory;
 	}
-
 
 
 	public ArrayList<Topping> getToppingList() {

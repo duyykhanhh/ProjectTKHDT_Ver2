@@ -134,9 +134,6 @@ public class Order extends JFrame {
 	private MilkTeaStore mn = new MilkTeaStore();
 	private List<Ingredient> ins=new ArrayList<>();
 	
-	private String urlRoot="";
-	private String urlIngre;
-
 
 
 
@@ -180,12 +177,7 @@ public class Order extends JFrame {
 	public Order() {
 		beverageType = new JLabel();
 		
-		urlRoot=Home.getUrlRoot();
-		urlIngre = urlRoot + "/ingredient";
-
-//		fileIngre = new FileRW("src/data/ingredient");
-		fileIngre = new FileRW(urlIngre);
-		
+		fileIngre = new FileRW("src/data/ingredient");
 		ins = fileIngre.readIngre();
 		mn.setIns(ins);
 		
@@ -740,36 +732,26 @@ public class Order extends JFrame {
 				Topping topping;
 				if(beverage instanceof MilkTea){
 				if(countPearl!=0){
-//					Topping topping = factory.createTopping(btnPearl.getText(),Integer.parseInt(lblNumOfPearl.getText()));
-//					Topping topping = beverage.getToppingFactory().createTopping(btnPearl.getText(),Integer.parseInt(lblNumOfPearl.getText()));
-//					topping = orderController.createTopping(btnPearl.getText(),countPearl);
+
 					 topping = orderController.createTopping(btnPearl.getText(),countPearl);
 
 					toppingList.add(topping);
 
 				}
-//				if(!lblNumOfPudding.getText().equalsIgnoreCase("0")){
+
 				if(countPudding!=0){
-//					Topping topping = factory.createTopping(btnPudding.getText(),Integer.parseInt(lblNumOfPudding.getText()));
-//					Topping topping = beverage.getToppingFactory().createTopping(btnPudding.getText(),Integer.parseInt(lblNumOfPudding.getText()));
-//					topping = orderController.createTopping(btnPudding.getText(),countPudding);
 				topping = orderController.createTopping(btnPudding.getText(),countPudding);
 
 					toppingList.add(topping);
 				}
-//				if(!lblNumOfGrassJelly.getText().equalsIgnoreCase("0")){
+
 				if(countGrassJelly!=0){
-//					Topping topping = factory.createTopping(btnGrassjelly.getText(),Integer.parseInt(lblNumOfGrassJelly.getText()));
-//					Topping topping = beverage.getToppingFactory().createTopping(btnGrassjelly.getText(),Integer.parseInt(lblNumOfGrassJelly.getText()));
-//					topping = orderController.createTopping(btnGrassjelly.getText(),countGrassJelly);
 					 topping = orderController.createTopping(btnGrassjelly.getText(),countGrassJelly);
 
 					toppingList.add(topping);
 				}
 				}
-//				if(beverage instanceof Coffee){
-//
-//				}
+
 
 				double price=0;		
 				price= orderController.getTotalPrice(beverage,flavour,toppingList,size);
@@ -790,9 +772,6 @@ public class Order extends JFrame {
 		});
 
 		pnOK.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-//		btnOK.setPreferredSize(new Dimension(40, 40));
-//		btnOK.setMinimumSize(new Dimension(40, 40));
-//		btnOK.setMaximumSize(new Dimension(40, 40));
 		btnOK.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		pnOK.add(btnOK);
 		pnOK.add(Box.createHorizontalStrut(20));
@@ -1728,7 +1707,6 @@ public void getCategory(JButton btn) {
     public void goToPay() {
 		
 		PayView pay = new PayView();
-		pay.setUrlRoot(urlRoot);
 		String totalPrice = lblRePrice.getText();
 		
 		for (int row = 0; row < this.model.getRowCount(); row++) {
@@ -1774,17 +1752,6 @@ public void getCategory(JButton btn) {
 	public void setModel(DefaultTableModel model) {
 		this.model = model;
 	}
-
-
-	public String getUrlRoot() {
-		return urlRoot;
-	}
-
-
-	public void setUrlRoot(String urlRoot) {
-		this.urlRoot = urlRoot;
-	}
-	
     
 	
     

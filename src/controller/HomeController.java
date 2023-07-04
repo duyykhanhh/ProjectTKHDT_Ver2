@@ -44,7 +44,7 @@ public class HomeController implements ActionListener, MouseListener{
 			String id = this.homeView.getTxtID().getText();
 			String pwd = this.homeView.getPassword();
 			boolean pass = this.homeView.checkLogin(id, pwd);
-			if(pass == true) {
+			if(this.homeView.stillWorking() ==true && pass == true) {
 				this.homeView.goToManagement();
 				this.homeView.clearLogin();
 			}

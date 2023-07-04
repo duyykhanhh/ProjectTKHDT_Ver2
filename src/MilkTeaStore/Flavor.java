@@ -1,8 +1,10 @@
 package MilkTeaStore;
 
+import view.Home;
+
 public class Flavor {
 
-	private static FileRW filePriceUnit = new FileRW("src/data/priceUnit");
+	private static FileRW filePriceUnit = new FileRW(Home.getUrlRoot() +"/priceUnit");
 //	private static double chocolatePrice = 5000;
 //	private static double mathcaPrice = 6000;
 //	private static double taroPrice = 7000;

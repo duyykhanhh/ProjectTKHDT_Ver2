@@ -10,7 +10,7 @@ public class OrderData {
     private List<Alarm> as=new ArrayList<>();
 	public OrderData() {
 		super();
-		this.obs = new ArrayList<>();
+		obs = new ArrayList<>();
 		fileAlarm= new FileRW("src/data/alarm");
 		as = fileAlarm.readAlarms();
 	}
@@ -43,27 +43,27 @@ public class OrderData {
 		notifyObs();
 	}
 	
-	public void freeAlarm(Alarm a) {
-		for(Alarm al : as) {
-			if(al.getNumber() == a.getNumber()) {
-				al.setAvailable(true);
-				break;
-			}
-		}
-		notifyObs();
-		fileAlarm.reWriteAlarm(as);
-	}
+//	public void freeAlarm(Alarm a) {
+//		for(Alarm al : as) {
+//			if(al.getNumber() == a.getNumber()) {
+//				al.setAvailable(true);
+//				break;
+//			}
+//		}
+//		notifyObs();
+//		fileAlarm.reWriteAlarm(as);
+//	}
 	
-	public void allocateAlarm(Alarm a) {
-		for(Alarm al : as) {
-			if(al.getNumber() == a.getNumber()) {
-				al.setAvailable(false);
-				break;
-			}
-		}
-		notifyObs();
-		fileAlarm.reWriteAlarm(as);
-	}
+//	public void allocateAlarm(Alarm a) {
+//		for(Alarm al : as) {
+//			if(al.getNumber() == a.getNumber()) {
+//				al.setAvailable(false);
+//				break;
+//			}
+//		}
+//		notifyObs();
+//		fileAlarm.reWriteAlarm(as);
+//	}
 	
 	
 	

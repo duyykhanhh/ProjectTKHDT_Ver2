@@ -1,7 +1,9 @@
 package MilkTeaStore;
 
+import view.Home;
+
 public class Size {
-	private static FileRW filePrice = new FileRW("scr/data/priceUnit");
+	private static FileRW filePrice = new FileRW(Home.getUrlRoot() +"/priceUnit");
 	private static double s= filePrice.readPriceUnit("small");
 	private static double m= filePrice.readPriceUnit("medium");
 	private static double l= filePrice.readPriceUnit("large");

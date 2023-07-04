@@ -134,6 +134,9 @@ public class Order extends JFrame {
 	private MilkTeaStore mn = new MilkTeaStore();
 	private List<Ingredient> ins=new ArrayList<>();
 	
+	private String urlRoot="";
+	private String urlIngre;
+
 
 
 
@@ -177,7 +180,12 @@ public class Order extends JFrame {
 	public Order() {
 		beverageType = new JLabel();
 		
-		fileIngre = new FileRW("src/data/ingredient");
+		urlRoot=Home.getUrlRoot();
+		urlIngre = urlRoot + "/ingredient";
+
+//		fileIngre = new FileRW("src/data/ingredient");
+		fileIngre = new FileRW(urlIngre);
+		
 		ins = fileIngre.readIngre();
 		mn.setIns(ins);
 		
@@ -1720,6 +1728,7 @@ public void getCategory(JButton btn) {
     public void goToPay() {
 		
 		PayView pay = new PayView();
+		pay.setUrlRoot(urlRoot);
 		String totalPrice = lblRePrice.getText();
 		
 		for (int row = 0; row < this.model.getRowCount(); row++) {
@@ -1765,6 +1774,17 @@ public void getCategory(JButton btn) {
 	public void setModel(DefaultTableModel model) {
 		this.model = model;
 	}
+
+
+	public String getUrlRoot() {
+		return urlRoot;
+	}
+
+
+	public void setUrlRoot(String urlRoot) {
+		this.urlRoot = urlRoot;
+	}
+	
     
 	
     

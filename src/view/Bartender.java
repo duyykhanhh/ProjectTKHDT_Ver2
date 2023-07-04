@@ -60,6 +60,9 @@ public class Bartender extends JFrame implements Observer{
 	private List<Alarm> as = new ArrayList<>();
 	private javax.swing.Timer timer;
 	
+	private String urlRoot="";
+	private String urlAlarm;
+	
 	
 
 
@@ -87,7 +90,11 @@ public class Bartender extends JFrame implements Observer{
 	 */
 //	public Bartender(OrderData orderData)
 	public Bartender() {
-		fileAlarm = new FileRW("src/data/alarm");
+		
+		urlRoot = Home.getUrlRoot();
+		urlAlarm = urlRoot + "/alarm";
+//		fileAlarm = new FileRW("src/data/alarm");
+		fileAlarm = new FileRW(urlAlarm);
 		as = this.fileAlarm.readAlarms();
 		PayView.registerObserver(this);
 
@@ -379,6 +386,16 @@ public class Bartender extends JFrame implements Observer{
 	
 	}
 
+	public String getUrlRoot() {
+		return urlRoot;
+	}
+
+	public void setUrlRoot(String urlRoot) {
+		this.urlRoot = urlRoot;
+	}
+
+	
+	
 
 	
 	

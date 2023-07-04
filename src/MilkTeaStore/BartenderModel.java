@@ -25,11 +25,11 @@ public class BartenderModel implements Observer{
 		
 	}
 	
-	public void finish(OrderModel order) {
-//		order.getAlarm().setAvailable(true);
-		orderData.freeAlarm(order.getAlarm());
-		orderList.remove(order);
-	}
+//	public void finish(OrderModel order) {
+////		order.getAlarm().setAvailable(true);
+//		orderData.freeAlarm(order.getAlarm());
+//		orderList.remove(order);
+//	}
 	
 	public void doAlarm(OrderModel order) {
 		order.getAlarm().ring();
@@ -49,9 +49,4 @@ public class BartenderModel implements Observer{
 	}
 	
 	
-	
-//	public boolean isChanged() {
-//		
-//	}
-//	
 }

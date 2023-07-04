@@ -1,8 +1,10 @@
 package MilkTeaStore;
 
+import view.Home;
+
 public class Pudding extends Topping {
 
-	private FileRW filePrice = new FileRW("scr/data/priceUnit");
+	private FileRW filePrice = new FileRW(Home.getUrlRoot() +"/priceUnit");
 //	private double price = filePrice.readPriceUnit("pudding");
     private double price = 5000;
 

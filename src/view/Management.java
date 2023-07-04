@@ -121,6 +121,10 @@ public class Management extends JFrame {
 //	private List<Customer> cuses = mn.getCuses();
 //	private List<RevenueToday> todays = mn.getTodays();
 //	private List<RevenueTotal> totals = mn.getTotals();
+	private String urlRoot="";
+	
+	private String urlEm, urlCus, urlIngre, urlToday, urlTotal;
+	
 	private FileRW fileEm, fileCus, fileIngre, fileToday, fileTotal;
 	private List<Ingredient> ins = new ArrayList<>();
 	private List<Employee> ems = new ArrayList<>();
@@ -157,19 +161,34 @@ public class Management extends JFrame {
 	 * Create the frame.
 	 */
 	public Management() {
-		this.fileIngre = new FileRW("src/data/ingredient");
+		
+		urlRoot= Home.getUrlRoot();
+		urlIngre = urlRoot +"/ingredient";
+//		this.fileIngre = new FileRW("src/data/ingredient");
+		this.fileIngre = new FileRW(urlIngre);
 		ins = this.fileIngre.readIngre();
 		mn.setIns(ins);
-		this.fileEm = new FileRW("src/data/employee");
+		urlEm = urlRoot + "/employee";
+//		this.fileEm = new FileRW("src/data/employee");
+		this.fileEm = new FileRW(urlEm);
 		ems = this.fileEm.readEm();
 		mn.setEms(ems);
-		this.fileCus = new FileRW("src/data/customer");
+		
+		urlCus = urlRoot + "/customer";
+//		this.fileCus = new FileRW("src/data/customer");
+		this.fileCus = new FileRW(urlCus);
 		cuses = this.fileCus.readCus();
 		mn.setCuses(cuses);
-		this.fileToday = new FileRW("src/data/revenueToday");
+		
+		urlToday = urlRoot + "/revenueToday";
+//		this.fileToday = new FileRW("src/data/revenueToday");
+		this.fileToday = new FileRW(urlToday);
 		todays = this.fileToday.readToday();
 		mn.setTodays(todays);
-		this.fileTotal = new FileRW("src/data/revenueTotal");
+		
+		urlTotal = urlRoot + "/revenueTotal";
+//		this.fileTotal = new FileRW("src/data/revenueTotal");
+		this.fileTotal = new FileRW(urlTotal);
 		totals = this.fileTotal.readTotal();
 		mn.setTotals(totals);
 		
@@ -1873,6 +1892,16 @@ public class Management extends JFrame {
 	public void setMn(MilkTeaStore mn) {
 		this.mn = mn;
 	}
+
+	public String getUrlRoot() {
+		return urlRoot;
+	}
+
+	public void setUrlRoot(String urlRoot) {
+		this.urlRoot = urlRoot;
+	}
+	
+	
 	
 	
 	

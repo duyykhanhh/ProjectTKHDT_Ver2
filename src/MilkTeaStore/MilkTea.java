@@ -2,8 +2,12 @@ package MilkTeaStore;
 
 import java.util.ArrayList;
 
+import view.Home;
+
 public class MilkTea extends Beverage{
-	private static FileRW filePrice = new FileRW("scr/data/priceUnit");
+	
+
+	private static FileRW filePrice = new FileRW(Home.getUrlRoot() +"/priceUnit");
 	private static double priceUnit = filePrice.readPriceUnit("milktea");
 	
 	

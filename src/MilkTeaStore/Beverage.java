@@ -2,10 +2,18 @@ package MilkTeaStore;
 
 import java.util.ArrayList;
 
+import view.Home;
+
 public abstract class Beverage {
-	private FileRW filePrice = new FileRW("scr/data/priceUnit");
+
 //	private static double priceUnit;
 //	private double price = filePrice.readPriceUnit("beverage");
+	
+	private String urlRoot=Home.getUrlRoot();
+	private String url = urlRoot + "/priceUnit";
+	
+	private FileRW filePrice = new FileRW(url);
+//	private FileRW filePrice;
 	private double price;
 
 	private IFlavourStrategy flavour;

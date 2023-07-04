@@ -41,7 +41,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.SwingConstants;
 
-//	mau nền: new Color(255, 235, 205)
+//	mau nen: new Color(255, 235, 205)
 //`	mau cac btn: new Color(255, 204, 153)
 public class Home extends JFrame {
 
@@ -61,6 +61,13 @@ public class Home extends JFrame {
 	private JLabel lblTitle;
 	private JButton btnBack;
 	private FileRW file;
+//	public static String urlRoot="";
+	private static String urlRoot="src/data";
+	private String urlFoot;
+	private String url;
+//	private List<Employee> ems = new ArrayList<>();
+	
+
 
 	/**
 	 * Launch the application.
@@ -82,7 +89,15 @@ public class Home extends JFrame {
 	 * Create the frame.
 	 */
 	public Home() {
-		file = new FileRW("src/data/employee");
+//		setUrlRoot("src/data");
+//		urlRoot="src/data";
+		urlFoot = "/employee";
+		url = urlRoot + urlFoot;
+		
+//		file = new FileRW("src/data/employee");
+		file = new FileRW(url);
+		
+//		ems= file.readEm();
 
 		
 		setTitle("Home");
@@ -262,6 +277,7 @@ public class Home extends JFrame {
 	
 	public void openOrder() {
 		Order order= new Order();
+		order.setUrlRoot(urlRoot);
 		order.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		order.setVisible(true);
 //		hàm đóng jframe hiện tại, là home
@@ -284,6 +300,7 @@ public class Home extends JFrame {
 		String user = "";
 		user = this.getTxtID().getText();
 		Management mn= new Management();
+//		mn.setUrlRoot(urlRoot);
 		mn.getLblUser().setText(user);
 		
 		if(user.equals("root")) {
@@ -303,6 +320,21 @@ public class Home extends JFrame {
 	
 		mn.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		mn.setVisible(true);
+	}
+	
+	public boolean stillWorking() {
+		String user = "";
+		user = this.getTxtID().getText();
+		boolean result=false;
+		List<Employee> ems = file.readEm();
+		for(Employee e : ems) {
+			if(e.getEmID().equals(user))
+				if(e.isWork()==true)
+					result=true;
+				else if(e.isWork()==false)
+					result=false;
+		}
+		return result;
 	}
 	
 	public JButton getBtnOrder() {
@@ -392,6 +424,15 @@ public class Home extends JFrame {
 		this.txtID.setText("");
 		this.txtPassword.setText("");
 	}
+	
+	public static String getUrlRoot() {
+		return urlRoot;
+	}
+
+	public static void setUrlRoot(String newRoot) {
+		urlRoot = newRoot;
+	}
+
 
 
 	

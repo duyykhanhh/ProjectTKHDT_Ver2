@@ -67,6 +67,9 @@ public class PayView extends JFrame {
     JPanel pnPrice, pnAlarmNum;
     
     private FileRW fileAlarm, fileToday, fileVoucher;
+    private String urlRoot="", url;
+    private String urlAlarm, urlToday, urlVoucher;
+    
 	private List<Alarm> as = new ArrayList<>();
     private JButton createReamote;
     private JPanel panel;
@@ -83,6 +86,8 @@ public class PayView extends JFrame {
 
 	private static OrderData orderData;
 	private static List<Observer> obs= new ArrayList<>();
+	
+	
 
     
 
@@ -92,12 +97,20 @@ public class PayView extends JFrame {
 	public PayView() {
 		orderData = new OrderData();
 //		obs = orderData.getObs();
-    	this.fileAlarm = new FileRW("src/data/alarm");
+		urlRoot = Home.getUrlRoot();
+		
+		urlAlarm = urlRoot + "/alarm";
+//    	this.fileAlarm = new FileRW("src/data/alarm");
+    	this.fileAlarm = new FileRW(urlAlarm);
 		as = this.fileAlarm.readAlarms();
 		
-		this.fileToday = new FileRW("src/data/revenueToday");
+		urlToday = urlRoot  +"/today";
+//		this.fileToday = new FileRW("src/data/revenueToday");
+		this.fileToday = new FileRW(urlToday);
 		
-		this.fileVoucher = new FileRW("src/data/voucher");
+		urlVoucher = urlRoot + "/voucher";
+//		this.fileVoucher = new FileRW("src/data/voucher");
+		this.fileVoucher = new FileRW(urlVoucher);
 		vchs = this.fileVoucher.readVouchers();
 
     	setTitle("Payment");
@@ -905,6 +918,16 @@ public class PayView extends JFrame {
 	public void updateBaternderData() {
 		
 	}
+
+	public String getUrlRoot() {
+		return urlRoot;
+	}
+
+	public void setUrlRoot(String urlRoot) {
+		this.urlRoot = urlRoot;
+	}
+	
+	
 	
 	
 	

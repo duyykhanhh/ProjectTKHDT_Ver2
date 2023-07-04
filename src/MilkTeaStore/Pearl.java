@@ -2,8 +2,10 @@ package MilkTeaStore;
 
 import java.util.ArrayList;
 
+import view.Home;
+
 public class Pearl extends Topping {
-	private static FileRW filePrice = new FileRW("scr/data/priceUnit");
+	private static FileRW filePrice = new FileRW(Home.getUrlRoot() +"/priceUnit");
 //	private double price = filePrice.readPriceUnit("pearl");
 	private double price=3000;
 

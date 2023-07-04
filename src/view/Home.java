@@ -328,7 +328,7 @@ public class Home extends JFrame {
 		boolean result=false;
 		List<Employee> ems = file.readEm();
 		if(user.equals("root"))
-			result =true;
+			result=true;
 		else {
 			for(Employee e : ems) {
 				if(e.getEmID().equals(user))

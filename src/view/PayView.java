@@ -104,7 +104,7 @@ public class PayView extends JFrame {
     	this.fileAlarm = new FileRW(urlAlarm);
 		as = this.fileAlarm.readAlarms();
 		
-		urlToday = urlRoot  +"/today";
+		urlToday = urlRoot  +"/revenueToday";
 //		this.fileToday = new FileRW("src/data/revenueToday");
 		this.fileToday = new FileRW(urlToday);
 		

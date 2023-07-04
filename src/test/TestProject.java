@@ -8,7 +8,9 @@ import view.PayView;
 public class TestProject {
 	public TestProject() {
 		
-//		duong dan den folder data
+//		NEN KIEM TRA DUONG DAN DEN FILE DATA TRUOC KHI CHAY THU CODE
+		
+//		duong dan den folder data tren window, eclipse : "src/data"
 		String urlRoot="src/data";
 		Home.setUrlRoot(urlRoot);
 		Home home = new Home();

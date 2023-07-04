@@ -77,6 +77,7 @@ public class Order extends JFrame {
  String flavour = "";
  String topping = "";
  JLabel beverageType;
+ String test="";
 
 	private ArrayList<String> toppings;
 //	private ArrayList<String> beverage;
